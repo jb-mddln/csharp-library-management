@@ -1,6 +1,6 @@
 ﻿using library_management.stock;
 
-namespace library_management.menu
+namespace library_management.managers
 {
     /// <summary>
     /// Gère la partie menu de notre console et l'affichage des données
@@ -10,7 +10,7 @@ namespace library_management.menu
         /// <summary>
         /// Constructeur par défaut, affiche notre menu directement lors de son initialisation
         /// </summary>
-        public MenuManager() 
+        public MenuManager()
         {
             Console.WriteLine(@"
 > Type '1, 2, 3, 4' to select quickly an option ...
@@ -71,10 +71,10 @@ namespace library_management.menu
                         break;
                     case '4':
                         Console.WriteLine("List of books not available: \n");
-                        Console.WriteLine(stock.GetTakenBooks());
+                        Console.WriteLine(stock.GetNotAvailableBooks());
                         break;
                     default:
-                        Console.WriteLine("Type a valid option first, valid options are 1, 2, 3, 4 ...");
+                        Console.WriteLine("Type a valid option first, valid options are '1, 2, 3, 4' ...");
                         break;
                 }
             }
