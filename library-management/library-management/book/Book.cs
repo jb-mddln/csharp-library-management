@@ -68,7 +68,7 @@
         public string GetDetails()
         {
             return "Id: " + Id
-                + "\n" + "Title: " + Title
+                + "\n" + "Titre: " + Title
                 + "\n" + "Auteur: " + Author
                 + "\n" + "Genre: " + Genre
                 + "\n" + "Collection: " + Collection

@@ -10,7 +10,16 @@
         /// </summary>
         public MenuManager()
         {
-            Console.WriteLine(@"
+            DisplayMenu();
+        }
+
+        /// <summary>
+        /// Affiche notre menu
+        /// </summary>
+        public void DisplayMenu()
+        {
+            Console.WriteLine(@"----
+----
 > Entrez '1, 2, 3, 4' pour sélectionner rapidement une option ...
 ----
 1) Afficher tous les membres de la bibliothèque
@@ -19,8 +28,8 @@
 4) Afficher tous les livres indisponibles à l'emprunt
 ----
 ----
-> Type 'book' to display the sub-menu for book (add, edit, delete)
-> Type 'borrow' to display the sub-menu for borrowing book (add, edit, delete)");
+> Entrez 'livre' pour afficher le sous-menu de gestion des livres (add, edit, delete)
+> Entrez 'membre' pour afficher le sous-menu de gestion des membres (add, edit, delete)");
         }
 
         /// <summary>
@@ -32,9 +41,12 @@
         {
             if (string.IsNullOrEmpty(line))
             {
-                Console.WriteLine("> Entrez d'abord '1, 2, 3, 4' pour sélectionner une option ...");
+                Console.WriteLine("> Erreur ligne vide ...");
                 return;
             }
+
+            // Efface le texte de notre console pour plus de clarté
+            Console.Clear();
 
             // Gère la sélection d'options rapide
             if (line.Length == 1)
@@ -62,13 +74,31 @@
                         break;
                 }
 
+                Console.WriteLine("> Tapez sur 'Entrée' pour revenir au menu principal");
+
+                // Récupère la touche pressée par l'utilisateur dans la console, tant que ce n'est pas la touche 'Entrée' on reste dans la boucle et on affiche le message
+                while (Console.ReadKey().Key != ConsoleKey.Enter)
+                {
+                    // Console.Clear();
+                    Console.WriteLine("\n> Tapez sur 'Entrée' pour revenir au menu principal");
+                }
+
+                // La touche pressée est égale à la touche entrée on a quitté la boucle alors on affiche le menu
+                Console.Clear();
+                DisplayMenu();
+
                 // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin notre condition est remplie
                 return;
             }
 
-            if (line.ToLower().Contains("book"))
+            // Condition if, si notre ligne de texte entrée par l'utilisateur contient le mot 'livre'
+            // Usage de ToLower pour passer la ligne en minuscule et gère les mots entrés en majuscule/miniscule par l'utilisateur
+            if (line.ToLower().Contains("livre"))
             {
                 // Sous-menu livre
+
+                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin notre condition est remplie
+                return;
             }
         }
     }
