@@ -67,8 +67,8 @@
         /// <returns>Infos du livre</returns>
         public string GetDetails()
         {
-            return "Livre : " + Title
-                + "\n" + "Id: " + Id
+            return "Id: " + Id
+                + "\n" + "Title: " + Title
                 + "\n" + "Auteur: " + Author
                 + "\n" + "Genre: " + Genre
                 + "\n" + "Collection: " + Collection

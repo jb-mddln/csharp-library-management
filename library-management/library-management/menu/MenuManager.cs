@@ -1,5 +1,4 @@
-﻿using library_management.book;
-using library_management.stock;
+﻿using library_management.stock;
 
 namespace library_management.menu
 {
@@ -13,15 +12,17 @@ namespace library_management.menu
         /// </summary>
         public MenuManager() 
         {
-            Console.WriteLine("Type 1, 2, 3, 4 to select an option ...");
             Console.WriteLine(@"
-1) Book management :
-    - Display all books, allow you to select, edit and add
-2) Borrower management
-    - Display all borrowers, allow you to select, edit and add
+> Type '1, 2, 3, 4' to select quickly an option ...
+----
+1) Display all books, allow you after to select, edit, add, delete
+2) Display all borrowers, allow you to select, edit, add, delete
 3) Display all books still available for borrowing
 4) Display all books not available for borrowing
-");
+----
+----
+> Type 'book' to display the sub-menu for book (add, edit, delete)
+> Type 'borrow' to display the sub-menu for borrowing book (add, edit, delete)");
         }
 
         /// <summary>
@@ -33,34 +34,49 @@ namespace library_management.menu
         {
             if (string.IsNullOrEmpty(line))
             {
-                Console.WriteLine("> Type 1, 2, 3, 4 first to select an option ...");
+                Console.WriteLine("> Type '1, 2, 3, 4' first to select an option ...");
                 return;
             }
 
-            switch (line[0]) 
+            // Gère la sélection d'options rapide
+            if (line.Length == 1)
             {
-                case '1':
-                    Console.WriteLine("List of books in the library: \n");
-                    Console.WriteLine(stock.GetBooksDetails());
+                switch (line[0])
+                {
+                    case '1':
+                        Console.WriteLine("> List of books in the library: \n");
+                        Console.WriteLine(stock.GetBooksDetails() + "\n");
 
-                    // Code sous-menu
-                    var subOption = Console.ReadLine();
+                        // Code sous-menu
+                        Console.WriteLine("> Type 'select, edit, delete + book id' for action or 'add' for adding a new book to the collection");
+                        var subOption = Console.ReadLine();
+                        if (string.IsNullOrEmpty(subOption))
+                        {
+                            Console.WriteLine("Type a command first: 'select, edit, delete, add'");
+                            return;
+                        }
 
-                    break;
-                case '2':
+                        switch (subOption)
+                        {
 
-                    break;
-                case '3':
-                    Console.WriteLine("List of books still available: \n");
-                    Console.WriteLine(stock.GetAvailableBooks());
-                    break;
-                case '4':
-                    Console.WriteLine("List of books not available: \n");
-                    Console.WriteLine(stock.GetTakenBooks());
-                    break;
-                default:
-                    Console.WriteLine("Type a valid option first, valid options are 1, 2, 3, 4 ...");
-                    break;
+                        }
+
+                        break;
+                    case '2':
+
+                        break;
+                    case '3':
+                        Console.WriteLine("List of books still available: \n");
+                        Console.WriteLine(stock.GetAvailableBooks());
+                        break;
+                    case '4':
+                        Console.WriteLine("List of books not available: \n");
+                        Console.WriteLine(stock.GetTakenBooks());
+                        break;
+                    default:
+                        Console.WriteLine("Type a valid option first, valid options are 1, 2, 3, 4 ...");
+                        break;
+                }
             }
         }
     }

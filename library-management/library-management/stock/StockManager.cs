@@ -70,7 +70,7 @@ namespace library_management.stock
         /// Retourne les détails de tous les livres indisponibles à l'emprunt sous forme de chaine de caractères
         /// </summary>
         /// <returns>Les détails de tous les livres indisponibles à l'emprunt</returns>
-        public string GetTakenBooks()
+        public string GetNotAvailableBooks()
         {
             // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
