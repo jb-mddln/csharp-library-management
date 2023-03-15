@@ -5,6 +5,8 @@
     /// </summary>
     public class Book
     {
+        public int Id { get; set; }
+
         public string Author { get; set; }
 
         public string Title { get; set; }
@@ -29,6 +31,7 @@
         /// <summary>
         /// Constructeur permettant d'initialiser directement nos attributs avec les paramètres
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="author"></param>
         /// <param name="title"></param>
         /// <param name="genre"></param>
@@ -36,8 +39,9 @@
         /// <param name="yearOfPublication"></param>
         /// <param name="stockAvailable"></param>
         /// <param name="maxStock"></param>
-        public Book(string author, string title, string genre, string collection, int yearOfPublication, int stockAvailable, int maxStock)
+        public Book(int id, string author, string title, string genre, string collection, int yearOfPublication, int stockAvailable, int maxStock)
         {
+            this.Id = id;
             this.Author = author;
             this.Title = title;
             this.Genre = genre;
@@ -64,6 +68,7 @@
         public string GetDetails()
         {
             return "Livre : " + Title
+                + "\n" + "Id: " + Id
                 + "\n" + "Auteur: " + Author
                 + "\n" + "Genre: " + Genre
                 + "\n" + "Collection: " + Collection

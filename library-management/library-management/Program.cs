@@ -37,7 +37,7 @@ namespace library_management
         /// <exception cref="NotImplementedException"></exception>
         private static void OnProcessExit(object? sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 }

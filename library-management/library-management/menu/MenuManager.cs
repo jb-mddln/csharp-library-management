@@ -1,9 +1,10 @@
-﻿using library_management.stock;
+﻿using library_management.book;
+using library_management.stock;
 
 namespace library_management.menu
 {
     /// <summary>
-    /// Gère la partie menu de notre console
+    /// Gère la partie menu de notre console et l'affichage des données
     /// </summary>
     public class MenuManager
     {
@@ -22,6 +23,11 @@ namespace library_management.menu
 ");
         }
 
+        /// <summary>
+        /// Gère notre menu, son affichage et les différentes options
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="stock"></param>
         public void HandleMenu(string line, StockManager stock)
         {
             if (string.IsNullOrEmpty(line))
@@ -33,10 +39,11 @@ namespace library_management.menu
             switch (line[0]) 
             {
                 case '1':
-                    foreach (var book in stock.Books)
-                    {
-                        Console.WriteLine(book.GetDetails());
-                    }
+                    Console.WriteLine("List of books in the library: \n");
+                    Console.WriteLine(stock.GetBooksDetails());
+                    
+                    var subOption = Console.ReadLine();
+
                     break;
                 case '2':
 
