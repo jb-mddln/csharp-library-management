@@ -1,10 +1,12 @@
-﻿namespace library_management.borrow
+﻿namespace library_management.member
 {
     /// <summary>
-    /// Représente notre objet Emprunteur
+    /// Représente notre objet Membre
     /// </summary>
-    public class Borrower
+    public class Member
     {
+        public int Id { get; set; }
+
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
@@ -16,7 +18,7 @@
         /// <summary>
         /// Constructeur par défaut
         /// </summary>
-        public Borrower() 
+        public Member() 
         { 
         }
     }
