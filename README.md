@@ -5,9 +5,8 @@ La bibliothèque municipale souhaite vérifier les entrées/sorties des livres q
 - Le code devra être développé en mode console dans un langage 100% orienté objet (Java ou C#)
 - Le code devra respecter les formalismes vus en cours
 - Un menu pour la saisie pourra être réalisé :
-		Ajout / modification d'un livre
-		 Ajout / modification d'un emprunteur
-		 Consultation du stock à un instant donné
-		 Consultation des emprunts en cours et passés d'un emprunteur 
-
+    * Ajout / modification d'un livre
+    * Ajout / modification d'un emprunteur
+	* Consultation du stock à un instant donné
+	* Consultation des emprunts en cours et passés d'un emprunteur 
 - Les données seront stockées dans un fichier csv à la fermeture du programme et rechargées à l'ouverture
