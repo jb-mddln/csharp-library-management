@@ -46,7 +46,7 @@
             // DateTime.ToString avec le format pour ne garder que le jour/mois/année heure:minute
             return "Id: " + Id
                 + "\n" + "Nom, Prénom: " + LastName + ", " + FirstName
-                + "\n" + "Date d'Inscription: " + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
+                + "\n" + "Date d'inscription: " + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
     }
 }
