@@ -53,19 +53,44 @@ namespace library_management.stock
         }
 
         /// <summary>
-        /// Retourne les détails de tout les livres sous forme de chaine de caractères
+        /// Retourne les détails de tous les livres encore disponibles à l'emprunt sous forme de chaine de caractères
         /// </summary>
-        /// <returns>Les détails de tout les livres</returns>
+        /// <returns>Les détails de tous les livres encore disponibles à l'emprunt</returns>
+        public string GetAvailableBooks()
+        {
+            // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
+            // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
+            return string.Join("\n\n", Books.Where(book => book.IsAvailbale()).Select(book => book.GetDetails()));
+        }
+
+        /// <summary>
+        /// Retourne les détails de tous les livres indisponibles à l'emprunt sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>Les détails de tous les livres indisponibles à l'emprunt</returns>
+        public string GetTakenBooks()
+        {
+            // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
+            // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
+            return string.Join("\n\n", Books.Where(book => book.IsAvailbale()).Select(book => book.GetDetails()));
+        }
+
+        /// <summary>
+        /// Retourne les détails de tous les livres sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>Les détails de tous les livres</returns>
         public string GetBooksDetails()
         {
-            // Liste vide pour stocker nos string contenant les infos des livres
-            var booksDetails = new List<string>();
-            foreach(Book book in Books)
-            {
-                booksDetails.Add(book.GetDetails());
-            }
-            // Utilisation de Join pour joindre notre liste et ajouter deux retours à la ligne pour la clarté lors de l'affichage
-            return string.Join("\n\n", booksDetails);
+            // Utilisation de Linq Select pour sélectionner et retourner les infos de chaque livre
+            // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
+            return string.Join("\n\n", Books.Select(book => book.GetDetails()));
+
+            /* Liste vide pour stocker nos string contenant les infos des livres
+             * var booksDetails = new List<string>();
+             * foreach(Book book in Books)
+             * {
+             * booksDetails.Add(book.GetDetails());
+             * }            
+             * return string.Join("\n\n", booksDetails); */
         }
 
         /// <summary>
