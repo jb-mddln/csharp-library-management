@@ -1,5 +1,4 @@
-﻿using library_management.menu;
-using library_management.stock;
+﻿using library_management.managers;
 
 namespace library_management
 {

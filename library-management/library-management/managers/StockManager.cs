@@ -1,6 +1,6 @@
 ﻿using library_management.book;
 
-namespace library_management.stock
+namespace library_management.managers
 {
     /// <summary>
     /// Récupère les données de nos livres et gère toutes les actions les concernant
