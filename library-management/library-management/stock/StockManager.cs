@@ -17,6 +17,9 @@ namespace library_management.stock
             // Initialise notre variable Books en tant que liste vide
             Books = new List<Book>();
 
+            // Enregistre l'événement "ProcessExit" et déclenche la méthode "OnProcessExit" lors de la fermeture de notre console
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+
             if (File.Exists("books.csv"))
             {
                 // Boucle foreach, chaque ligne de notre fichier books.csv représente un objet Book
@@ -99,6 +102,16 @@ namespace library_management.stock
         public void Save()
         {
 
+        }
+
+        /// <summary>
+        /// Méthode de retour pour notre événement, se déclenche à la fermeture de notre console
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnProcessExit(object? sender, EventArgs e)
+        {
+            Save();
         }
     }
 }
