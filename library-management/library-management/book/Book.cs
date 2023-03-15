@@ -63,13 +63,13 @@
         /// <returns>Infos du livre</returns>
         public string GetDetails()
         {
-            return "Livre"
-                + " Auteur: " + Author
-                + " Titre: " + Title
-                + " Genre: " + Genre
-                + " Collection: " + Collection
-                + " Date de publication: " + YearOfPublication
-                + " Stock: " + StockAvailable + " / " + MaxStock;
+            return "Livre : " + Title
+                + "\n" + "Auteur: " + Author
+                + "\n" + "Genre: " + Genre
+                + "\n" + "Collection: " + Collection
+                + "\n" + "Date de publication: " + YearOfPublication
+                + "\n" + "Stock: " + StockAvailable + " / " + MaxStock
+                + "\n" + "Disponible: " + (IsAvailbale() ? "Oui" : "Non");
         }
     }
 }
