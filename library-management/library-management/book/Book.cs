@@ -17,10 +17,12 @@
 
         public int StockAvailable { get; set; }
 
+        public int MaxStock { get; set; }
+
         /// <summary>
         /// Constructeur par défaut
         /// </summary>
-        public Book() 
+        public Book()
         {
         }
 
@@ -33,7 +35,8 @@
         /// <param name="collection"></param>
         /// <param name="yearOfPublication"></param>
         /// <param name="stockAvailable"></param>
-        public Book(string author, string title, string genre, string collection, int yearOfPublication, int stockAvailable)
+        /// <param name="maxStock"></param>
+        public Book(string author, string title, string genre, string collection, int yearOfPublication, int stockAvailable, int maxStock)
         {
             this.Author = author;
             this.Title = title;
@@ -41,16 +44,32 @@
             this.Collection = collection;
             this.YearOfPublication = yearOfPublication;
             this.StockAvailable = stockAvailable;
+            this.MaxStock = maxStock;
         }
 
 
         /// <summary>
         /// Permets de vérifier si notre livre est toujours disponible à l'emprunt
         /// </summary>
-        /// <returns>Retourne vrai si le stock est supérieur à 0</returns>
+        /// <returns>Retourne vrai si le livre est toujours disponible</returns>
         public bool IsAvailbale()
         {
             return this.StockAvailable > 0;
+        }
+
+        /// <summary>
+        /// Retourne les informations du livre sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>Infos du livre</returns>
+        public string GetDetails()
+        {
+            return "Livre"
+                + " Auteur: " + Author
+                + " Titre: " + Title
+                + " Genre: " + Genre
+                + " Collection: " + Collection
+                + " Date de publication: " + YearOfPublication
+                + " Stock: " + StockAvailable + " / " + MaxStock;
         }
     }
 }

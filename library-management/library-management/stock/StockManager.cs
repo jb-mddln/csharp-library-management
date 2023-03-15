@@ -37,6 +37,7 @@ namespace library_management.stock
                     book.Collection = bookInfos[3];
                     book.YearOfPublication = int.Parse(bookInfos[4]);
                     book.StockAvailable = int.Parse(bookInfos[5]);
+                    book.MaxStock = int.Parse(bookInfos[6]);
 
                     // Ajout du livre dans notre liste
                     Books.Add(book);
@@ -48,6 +49,14 @@ namespace library_management.stock
 
             // Aucune donnée sur les livres, ont créé notre fichier
             File.Create("books.csv");
+        }
+
+        /// <summary>
+        /// Sauvegarde la liste Books dans un fichier books.csv
+        /// </summary>
+        public void Save()
+        {
+
         }
     }
 }

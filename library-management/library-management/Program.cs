@@ -25,7 +25,7 @@ namespace library_management
                 string? line = Console.ReadLine();
 
                 // Appelle notre méthode de gestion de menu
-                menuManager.HandleMenu(line);
+                menuManager.HandleMenu(line, stockManager);
             }
         }
 
