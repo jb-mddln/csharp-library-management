@@ -1,6 +1,4 @@
-﻿using library_management.stock;
-
-namespace library_management.managers
+﻿namespace library_management.managers
 {
     /// <summary>
     /// Gère la partie menu de notre console et l'affichage des données
@@ -15,8 +13,8 @@ namespace library_management.managers
             Console.WriteLine(@"
 > Type '1, 2, 3, 4' to select quickly an option ...
 ----
-1) Display all books, allow you after to select, edit, add, delete
-2) Display all borrowers, allow you to select, edit, add, delete
+1) Display all members, allow you to select, edit, add, delete
+2) Display all books, allow you after to select, edit, add, delete
 3) Display all books still available for borrowing
 4) Display all books not available for borrowing
 ----
@@ -26,11 +24,11 @@ namespace library_management.managers
         }
 
         /// <summary>
-        /// Gère notre menu, son affichage et les différentes options
+        /// Gère notre menu, son affichage, les différentes options et actions sur nos managers
         /// </summary>
         /// <param name="line"></param>
         /// <param name="stock"></param>
-        public void HandleMenu(string line, StockManager stock)
+        public void HandleMenu(string line, MemberManager member, StockManager stock)
         {
             if (string.IsNullOrEmpty(line))
             {
@@ -44,6 +42,10 @@ namespace library_management.managers
                 switch (line[0])
                 {
                     case '1':
+                        Console.WriteLine("> List of members in the library: \n");
+                        Console.WriteLine(member.GetMembersDetails() + "\n");
+                        break;
+                    case '2':
                         Console.WriteLine("> List of books in the library: \n");
                         Console.WriteLine(stock.GetBooksDetails() + "\n");
 
@@ -60,9 +62,6 @@ namespace library_management.managers
                         {
 
                         }
-
-                        break;
-                    case '2':
 
                         break;
                     case '3':
