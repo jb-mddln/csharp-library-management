@@ -7,9 +7,9 @@
     {
         public int Id { get; set; }
 
-        public string Author { get; set; }
-
         public string Title { get; set; }
+
+        public string Author { get; set; }
 
         public string Genre { get; set; }
 
@@ -32,18 +32,18 @@
         /// Constructeur permettant d'initialiser directement nos attributs avec les paramètres
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="author"></param>
         /// <param name="title"></param>
+        /// <param name="author"></param>
         /// <param name="genre"></param>
         /// <param name="collection"></param>
         /// <param name="yearOfPublication"></param>
         /// <param name="stockAvailable"></param>
         /// <param name="maxStock"></param>
-        public Book(int id, string author, string title, string genre, string collection, int yearOfPublication, int stockAvailable, int maxStock)
+        public Book(int id, string title, string author, string genre, string collection, int yearOfPublication, int stockAvailable, int maxStock)
         {
             this.Id = id;
-            this.Author = author;
             this.Title = title;
+            this.Author = author;
             this.Genre = genre;
             this.Collection = collection;
             this.YearOfPublication = yearOfPublication;

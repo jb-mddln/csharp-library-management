@@ -15,7 +15,7 @@ namespace library_management
             StockManager stockManager = new StockManager();
             MenuManager menuManager = new MenuManager();
 
-            // Boucle pour forcer l'état ouvert de la console et gérer le texte entré dessus
+            // Boucle infinie pour forcer l'état ouvert de la console et gérer le texte entré dessus
             while (true)
             {
                 // Récupère notre texte dans une variable de type string? nullable

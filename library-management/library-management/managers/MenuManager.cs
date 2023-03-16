@@ -16,7 +16,7 @@
         /// <summary>
         /// Affiche notre menu
         /// </summary>
-        public void DisplayMenu()
+        private void DisplayMenu()
         {
             Console.WriteLine(@"----
 ----
@@ -28,8 +28,36 @@
 4) Afficher tous les livres indisponibles à l'emprunt
 ----
 ----
-> Entrez 'livre' pour afficher le sous-menu de gestion des livres (add, edit, delete)
-> Entrez 'membre' pour afficher le sous-menu de gestion des membres (add, edit, delete)");
+> Entrez 'livre' pour afficher le sous-menu de gestion des livres (ajouter, supprimer, modifier)
+> Entrez 'membre' pour afficher le sous-menu de gestion des membres (ajouter, supprimer, modifier)");
+        }
+
+        /// <summary>
+        /// Affiche notre sous menu pour livre et membre
+        /// </summary>
+        private void DisplaySubMenu()
+        {
+            Console.WriteLine(@"----
+> Entrez 'ajouter, supprimer, modifier' ...
+----");
+        }
+
+        /// <summary>
+        /// Demande à l'utilisateur de taper sur sa touche 'Entrée' pour retourner au menu principal
+        /// </summary>
+        private void DisplayAndHandleEnterKey()
+        {
+            Console.WriteLine("> Tapez sur 'Entrée' pour revenir au menu principal");
+
+            // Boucle infinie, récupère la touche pressée par l'utilisateur dans la console tant que ce n'est pas la touche 'Entrée' on reste dans la boucle et on affiche le message
+            while (Console.ReadKey().Key != ConsoleKey.Enter)
+            {
+                Console.WriteLine("\n> Tapez sur 'Entrée' pour revenir au menu principal");
+            }
+
+            // La touche pressée est égale à la touche entrée on a quitté la boucle alors on affiche le menu
+            Console.Clear();
+            DisplayMenu();
         }
 
         /// <summary>
@@ -39,6 +67,7 @@
         /// <param name="stock"></param>
         public void HandleMenu(string line, MemberManager member, StockManager stock)
         {
+            // Condition if, si notre ligne est "null" ou vide alors on affiche un message d'erreur
             if (string.IsNullOrEmpty(line))
             {
                 Console.WriteLine("> Erreur ligne vide ...");
@@ -48,9 +77,10 @@
             // Efface le texte de notre console pour plus de clarté
             Console.Clear();
 
-            // Gère la sélection d'options rapide
+            // Condition if, si notre ligne ne contient qu'un caractère il s'agit surement d'une option rapide
             if (line.Length == 1)
             {
+                // Gère la sélection d'options rapide, 1er caractère de notre ligne
                 switch (line[0])
                 {
                     case '1':
@@ -74,32 +104,86 @@
                         break;
                 }
 
-                Console.WriteLine("> Tapez sur 'Entrée' pour revenir au menu principal");
-
-                // Récupère la touche pressée par l'utilisateur dans la console, tant que ce n'est pas la touche 'Entrée' on reste dans la boucle et on affiche le message
-                while (Console.ReadKey().Key != ConsoleKey.Enter)
-                {
-                    // Console.Clear();
-                    Console.WriteLine("\n> Tapez sur 'Entrée' pour revenir au menu principal");
-                }
-
-                // La touche pressée est égale à la touche entrée on a quitté la boucle alors on affiche le menu
-                Console.Clear();
-                DisplayMenu();
+                // Gestion de la touche 'Entrée' pour retourner au menu principale
+                DisplayAndHandleEnterKey();
 
                 // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin notre condition est remplie
                 return;
             }
 
-            // Condition if, si notre ligne de texte entrée par l'utilisateur contient le mot 'livre'
-            // Usage de ToLower pour passer la ligne en minuscule et gère les mots entrés en majuscule/miniscule par l'utilisateur
-            if (line.ToLower().Contains("livre"))
+            DisplaySubMenu();
+
+            // Variable string? 'null', utile plus tard dans notre switch pour récupérer l'option secondaire de l'utilisateur
+            string? subOption = null;
+            bool exitSubMenuOption = false;
+
+            // Découpe notre ligne de texte après chaque espace vide, sous forme de tableau Array
+            string[] subMenu = line.Split(" ");
+            // Switch uniquement sur notre 1er element string de notre tableau, ToLower pour gérer les mots entrés en majuscule/miniscule par l'utilisateur
+            switch (subMenu[0].ToLower())
             {
-                // Sous-menu livre
+                case "livre":
+                    // Boucle while tant que la variable exitSubMenuOption est false, gère le texte entré par l'utilisateur dans notre sous menu
+                    while (!exitSubMenuOption)
+                    {
+                        subOption = Console.ReadLine();
 
-                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin notre condition est remplie
-                return;
+                        // Condition if, si notre ligne est "null" ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
+                        if (string.IsNullOrEmpty(subOption))
+                        {
+                            Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
+                            // Indique de ne pas sortir de notre boucle, reviens au début de celle-ci et évite de continuer l'exécution avec le code plus bas
+                            continue;
+                        }
+
+                        string[] subMenuOption = subOption.Split(" ");
+                        switch (subMenuOption[0].ToLower())
+                        {
+                            case "ajouter":
+
+                                string[] parameters = new string[6];
+
+                                Console.WriteLine("> Entrez un nom de livre: ");
+                                string? bookTitle = Console.ReadLine();
+
+                                while (string.IsNullOrEmpty(bookTitle))
+                                {
+                                    Console.WriteLine("> Erreur le nom du livre ne peut pas être vide ...");
+                                    Console.WriteLine("> Entrez un nom de livre: ");
+                                    bookTitle = Console.ReadLine();
+                                }
+
+                                Console.WriteLine("> Entrez un nom d'Auteur: ");
+                                string? authorName = Console.ReadLine();
+
+                                while (string.IsNullOrEmpty(authorName))
+                                {
+                                    Console.WriteLine("> Erreur l'auteur du livre ne peut pas être vide ...");
+                                    Console.WriteLine("> Entrez un nom d'Auteur: ");
+                                    authorName = Console.ReadLine();
+                                }
+
+                                parameters[0] = bookTitle;
+                                parameters[1] = authorName;
+
+                                stock.TryAddBook(parameters);
+
+                                exitSubMenuOption = true;
+                                break;
+                            default:
+                                Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
+                                break;
+                        }
+
+                    }
+                    break;
+                default:
+                    Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'livre, membre' ...");
+                    break;
             }
+
+            // Gestion de la touche 'Entrée' pour retourner au menu principale
+            DisplayAndHandleEnterKey();
         }
     }
 }

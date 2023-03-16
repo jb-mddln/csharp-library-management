@@ -35,8 +35,8 @@ namespace library_management.managers
 
                     // On passe nos infos dans les différents attributs
                     book.Id = int.Parse(bookInfos[0]);
-                    book.Author = bookInfos[1];
-                    book.Title = bookInfos[2];
+                    book.Title = bookInfos[1];
+                    book.Author = bookInfos[2];
                     book.Genre = bookInfos[3];
                     book.Collection = bookInfos[4];
                     book.YearOfPublication = int.Parse(bookInfos[5]);
@@ -53,6 +53,11 @@ namespace library_management.managers
 
             // Aucune donnée sur les livres, ont créé notre fichier
             File.Create("books.csv");
+        }
+
+        public bool TryAddBook(string[] parameters)
+        {
+            return false;
         }
 
         /// <summary>
