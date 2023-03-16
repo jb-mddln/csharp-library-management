@@ -12,7 +12,7 @@ namespace library_management
         {
             // Initialisation de nos différentes class permettant de gérer les actions de l'utilisateur
             MemberManager memberManager = new MemberManager();
-            StockManager stockManager = new StockManager();
+            BookManager stockManager = new BookManager();
             MenuManager menuManager = new MenuManager();
 
             // Boucle infinie pour forcer l'état ouvert de la console et gérer le texte entré dessus
