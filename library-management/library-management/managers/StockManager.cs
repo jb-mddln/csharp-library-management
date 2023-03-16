@@ -163,7 +163,7 @@ namespace library_management.managers
         public void Save()
         {
             // Linq, Select
-            File.WriteAllLines("books.csv", Books.Select(book => book.GetBookCSV()));
+            File.WriteAllLines("books.csv", Books.Select(book => book.GetCSV()));
 
             /* using StreamWriter sw = new StreamWriter("books.csv");
              * foreach (Book book in Books)

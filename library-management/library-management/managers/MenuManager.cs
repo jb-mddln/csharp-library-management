@@ -65,7 +65,7 @@
         /// </summary>
         /// <param name="line"></param>
         /// <param name="stock"></param>
-        public void HandleMenu(string line, MemberManager member, StockManager stock)
+        public void HandleMenu(string line, MemberManager memberManager, StockManager stockManager)
         {
             // Condition if, si notre ligne est "null" ou vide alors on affiche un message d'erreur
             if (string.IsNullOrEmpty(line))
@@ -85,19 +85,19 @@
                 {
                     case '1':
                         Console.WriteLine("> Liste des membres de la bibliothèque: \n");
-                        Console.WriteLine(member.GetMembersDetails() + "\n");
+                        Console.WriteLine(memberManager.GetMembersDetails() + "\n");
                         break;
                     case '2':
                         Console.WriteLine("> Liste des livres de la bibliothèque: \n");
-                        Console.WriteLine(stock.GetBooksDetails() + "\n");
+                        Console.WriteLine(stockManager.GetBooksDetails() + "\n");
                         break;
                     case '3':
                         Console.WriteLine("> Liste des livres encore disponibles à l'emprunt: \n");
-                        Console.WriteLine(stock.GetAvailableBooks());
+                        Console.WriteLine(stockManager.GetAvailableBooks());
                         break;
                     case '4':
                         Console.WriteLine("> Liste des livres indisponibles à l'emprunt: \n");
-                        Console.WriteLine(stock.GetNotAvailableBooks());
+                        Console.WriteLine(stockManager.GetNotAvailableBooks());
                         break;
                     default:
                         Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");
@@ -113,8 +113,6 @@
 
             DisplaySubMenu();
 
-            // Variable string? 'null', utile plus tard dans notre switch pour récupérer l'option secondaire de l'utilisateur
-            string? subOption = null;
             bool exitSubMenuOption = false;
 
             // Découpe notre ligne de texte après chaque espace vide, sous forme de tableau Array
@@ -123,26 +121,19 @@
             switch (subMenu[0].ToLower())
             {
                 case "livre":
-                    // Boucle while tant que la variable exitSubMenuOption est false, gère le texte entré par l'utilisateur dans notre sous menu
+                    // Boucle while tant que la variable exitSubMenuOption est false, gère le texte entré par l'utilisateur dans notre sous menu livre
                     while (!exitSubMenuOption)
                     {
-                        subOption = Console.ReadLine();
-
-                        // Condition if, si notre ligne est "null" ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
+                        string? subOption = HandleSubMenuSelection();
+                        // Option null ou vide on repart en haut de notre boucle while
                         if (string.IsNullOrEmpty(subOption))
-                        {
-                            Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
-                            // Indique de ne pas sortir de notre boucle, reviens au début de celle-ci et évite de continuer l'exécution avec le code plus bas
                             continue;
-                        }
 
-                        string[] subMenuOption = subOption.Split(" ");
-                        switch (subMenuOption[0].ToLower())
+                        switch (subOption)
                         {
                             case "ajouter":
-
                                 string[] parameters = new string[6];
-                                
+
                                 parameters[0] = HandleStringParameterInput("Nom du livre");
                                 parameters[1] = HandleStringParameterInput("Auteur");
                                 parameters[2] = HandleStringParameterInput("Genre");
@@ -150,7 +141,7 @@
                                 parameters[4] = HandleStringParameterInput("Date de publication");
                                 parameters[5] = HandleStringParameterInput("Nombre du stock");
 
-                                if (stock.TryAddBook(parameters) == true)
+                                if (stockManager.TryAddBook(parameters) == true)
                                 {
                                     Console.WriteLine($"> Succès le livre {parameters[0]} a bien été ajouter aux livres de la bibliothèque");
                                 }
@@ -162,13 +153,62 @@
                                 // Pour sortir de notre boucle while plus haut
                                 exitSubMenuOption = true;
                                 break;
+                            case "supprimer":
+                                break;
+                            case "modifier":
+                                break;
                             default:
                                 Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
                                 break;
                         }
-
                     }
+                    // Reset de notre variable
+                    exitSubMenuOption = false;
                     break;
+
+                case "membre":
+                    // Boucle while tant que la variable exitSubMenuOption est false, gère le texte entré par l'utilisateur dans notre sous menu livre
+                    while (!exitSubMenuOption)
+                    {
+                        string? subOption = HandleSubMenuSelection();
+                        // Option null ou vide on repart en haut de notre boucle while
+                        if (string.IsNullOrEmpty(subOption))
+                            continue;
+
+                        switch (subOption)
+                        {
+                            case "ajouter":
+                                string[] parameters = new string[2];
+
+                                parameters[0] = HandleStringParameterInput("Nom");
+                                parameters[1] = HandleStringParameterInput("Prénom");
+
+
+                                if (memberManager.TryAddMember(parameters) == true)
+                                {
+                                    Console.WriteLine($"> Succès le membre {parameters[0]} {parameters[1]} a bien été ajouter aux membres de la bibliothèque");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"> Une erreur est survenue lors de l'ajout du membre ...");
+                                }
+
+                                // Pour sortir de notre boucle while plus haut
+                                exitSubMenuOption = true;
+                                break;
+                            case "supprimer":
+                                break;
+                            case "modifier":
+                                break;
+                            default:
+                                Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
+                                break;
+                        }
+                    }
+                    // Reset de notre variable
+                    exitSubMenuOption = false;
+                    break;
+
                 default:
                     Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'livre, membre' ...");
                     break;
@@ -176,6 +216,24 @@
 
             // Gestion de la touche 'Entrée' pour retourner au menu principale
             DisplayAndHandleEnterKey();
+        }
+
+        private string? HandleSubMenuSelection()
+        {
+            string? subOption = Console.ReadLine();
+
+            // Condition if, si notre ligne est "null" ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
+            if (string.IsNullOrEmpty(subOption))
+            {
+                Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
+                return null;
+            }
+
+            // Découpe le string entré par l'utilisateur, on ne veut que récupérer le 1er mot
+            string[] subMenuOption = subOption.Split(" ");
+
+            // On retourne notre string en miniscule
+            return subMenuOption[0].ToLower();
         }
 
         /// <summary>
