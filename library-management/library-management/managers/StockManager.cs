@@ -136,7 +136,7 @@ namespace library_management.managers
         {
             // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
-            return string.Join("\n\n", Books.Where(book => book.IsAvailbale()).Select(book => book.GetDetails()));
+            return string.Join("\n\n", Books.Where(book => !book.IsAvailbale()).Select(book => book.GetDetails()));
         }
 
         /// <summary>
