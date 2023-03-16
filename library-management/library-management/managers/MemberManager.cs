@@ -73,7 +73,14 @@ namespace library_management.managers
         /// </summary>
         public void Save()
         {
+            // Linq, Select
+            File.WriteAllLines("members.csv", Members.Select(member => member.GetCSV()));
 
+            /* using StreamWriter sw = new StreamWriter("members.csv");
+             * foreach (Member member in Members)
+             * {
+             * sw.WriteLine(member.GetBookCSV());
+             * } */
         }
 
         /// <summary>

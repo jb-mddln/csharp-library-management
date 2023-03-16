@@ -81,7 +81,7 @@
         /// Retourne notre livre au format CSV (comma-separated values)
         /// </summary>
         /// <returns>Infos du livre au format CSV</returns>
-        public string GetBookCSV()
+        public string GetCSV()
         {
             return Id + ","
                 + Title + ","

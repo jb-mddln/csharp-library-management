@@ -48,5 +48,17 @@
                 + "\n" + "Nom, Prénom: " + LastName + ", " + FirstName
                 + "\n" + "Date d'inscription: " + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
+
+        /// <summary>
+        /// Retourne notre membre au format CSV (comma-separated values)
+        /// </summary>
+        /// <returns>Infos du membre au format CSV</returns>
+        public string GetCSV()
+        {
+            return Id + ","
+                + LastName + ","
+                + FirstName + ","
+                + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
+        }
     }
 }
