@@ -142,32 +142,24 @@
                             case "ajouter":
 
                                 string[] parameters = new string[6];
+                                
+                                parameters[0] = HandleStringParameterInput("Nom du livre");
+                                parameters[1] = HandleStringParameterInput("Auteur");
+                                parameters[2] = HandleStringParameterInput("Genre");
+                                parameters[3] = HandleStringParameterInput("Collection");
+                                parameters[4] = HandleStringParameterInput("Date de publication");
+                                parameters[5] = HandleStringParameterInput("Nombre du stock");
 
-                                Console.WriteLine("> Entrez un nom de livre: ");
-                                string? bookTitle = Console.ReadLine();
-
-                                while (string.IsNullOrEmpty(bookTitle))
+                                if (stock.TryAddBook(parameters) == true)
                                 {
-                                    Console.WriteLine("> Erreur le nom du livre ne peut pas être vide ...");
-                                    Console.WriteLine("> Entrez un nom de livre: ");
-                                    bookTitle = Console.ReadLine();
+                                    Console.WriteLine($"> Succès le livre {parameters[0]} a bien été ajouter aux livres de la bibliothèque");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"> Une erreur est survenue lors de l'ajout du livre ...");
                                 }
 
-                                Console.WriteLine("> Entrez un nom d'Auteur: ");
-                                string? authorName = Console.ReadLine();
-
-                                while (string.IsNullOrEmpty(authorName))
-                                {
-                                    Console.WriteLine("> Erreur l'auteur du livre ne peut pas être vide ...");
-                                    Console.WriteLine("> Entrez un nom d'Auteur: ");
-                                    authorName = Console.ReadLine();
-                                }
-
-                                parameters[0] = bookTitle;
-                                parameters[1] = authorName;
-
-                                stock.TryAddBook(parameters);
-
+                                // Pour sortir de notre boucle while plus haut
                                 exitSubMenuOption = true;
                                 break;
                             default:
@@ -184,6 +176,27 @@
 
             // Gestion de la touche 'Entrée' pour retourner au menu principale
             DisplayAndHandleEnterKey();
+        }
+
+        /// <summary>
+        /// Récupère le texte entré par l'utilisateur, ne peut être null ou vide
+        /// </summary>
+        /// <param name="parameterName">Nom du paramètre à récupérer sert uniquement pour l'affichage du texte d'erreur</param>
+        /// <returns>Paramètre entré par l'utilisateur</returns>
+        private string HandleStringParameterInput(string parameterName)
+        {
+            Console.WriteLine($"> Entrez {parameterName}: ");
+
+            string? parameter = Console.ReadLine();
+
+            while (string.IsNullOrEmpty(parameter))
+            {
+                Console.WriteLine($"> Erreur {parameterName} ne peut pas être vide ...");
+                Console.WriteLine($"> Entrez {parameterName}: ");
+                parameter = Console.ReadLine();
+            }
+
+            return parameter;
         }
     }
 }
