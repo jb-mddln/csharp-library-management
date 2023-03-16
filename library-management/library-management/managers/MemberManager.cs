@@ -53,23 +53,23 @@ namespace library_management.managers
         {
             Member newMember = new Member();
 
-            string firstName = parameters[0];
-            string lastName = parameters[1];
+            string lastName = parameters[0];
+            string firstName = parameters[1];
 
             // Titre 'null' ou vide on retourne false et stop l'ajout (ne dois normalement jamais arrivée)
-            if (string.IsNullOrEmpty(firstName))
+            if (string.IsNullOrEmpty(lastName))
                 return false;
 
             // Auteur 'null' ou vide on retourne false et stop l'ajout (ne dois normalement jamais arrivée)
-            if (string.IsNullOrEmpty(lastName))
+            if (string.IsNullOrEmpty(firstName))
                 return false;
 
             // Utilisation de Linq Select pour récupérer l'id max de notre liste membre
             int id = Members.Select(member => member.Id).Max();
 
             newMember.Id = id + 1; // Id max de notre liste + 1 pour un id libre
-            newMember.FirstName = firstName;
             newMember.LastName = lastName;
+            newMember.FirstName = firstName;
             newMember.RegistrationDate = DateTime.Now;
 
             // Linq Any, notre liste Books contient déjà un livre avec l'id générer on stop l'ajout retourne false (ne dois normalement jamais arrivée)
