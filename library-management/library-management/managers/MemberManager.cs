@@ -82,6 +82,30 @@ namespace library_management.managers
             return true;
         }
 
+        public bool TryDeleteMember(string memberIdString)
+        {
+            // memberIdString n'est pas un integer valide retourne false on stop la suppression
+            if (!int.TryParse(memberIdString, out int memberId))
+                return false;
+
+            // Linq Any, notre liste Members ne contient pas de membre avec l'id on stop la suppression retourne false
+            if (!Members.Any(member => member.Id == memberId))
+                return false;
+
+            Members.RemoveAll(member => member.Id == memberId);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Retourne l'id et nom, prénom de tous les membres sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>L'id et nom, prénom de tous les membres</returns>
+        public string GetMembersIdAndName()
+        {
+            return string.Join("\n\n", Members.Select(member => member.GetIdAndName()));
+        }
+
         /// <summary>
         /// Retourne les détails de tous les livres sous forme de chaine de caractères
         /// </summary>

@@ -5,14 +5,14 @@ namespace library_management.managers
     /// <summary>
     /// Récupère les données de nos livres et gère toutes les actions les concernant
     /// </summary>
-    public class StockManager
+    public class BookManager
     {
         public List<Book> Books { get; set; }
 
         /// <summary>
         /// Constructeur par défaut, récupère les infos via un fichier CSV
         /// </summary>
-        public StockManager() 
+        public BookManager() 
         {
             // Initialise notre variable Books en tant que liste vide
             Books = new List<Book>();

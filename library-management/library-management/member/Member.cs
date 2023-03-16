@@ -38,6 +38,15 @@
         }
 
         /// <summary>
+        /// Retourne uniquement l'id du membre et son nom, prénom
+        /// </summary>
+        /// <returns>Id du membre et son nom, prénom</returns>
+        public string GetIdAndName()
+        {
+            return Id + " " + LastName + " " + FirstName;
+        }
+
+        /// <summary>
         /// Retourne les informations du membre sous forme de chaine de caractères
         /// </summary>
         /// <returns>Infos du membre</returns>

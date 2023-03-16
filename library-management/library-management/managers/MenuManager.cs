@@ -65,7 +65,7 @@
         /// </summary>
         /// <param name="line"></param>
         /// <param name="stock"></param>
-        public void HandleMenu(string line, MemberManager memberManager, StockManager stockManager)
+        public void HandleMenu(string line, MemberManager memberManager, BookManager bookManager)
         {
             // Condition if, si notre ligne est "null" ou vide alors on affiche un message d'erreur
             if (string.IsNullOrEmpty(line))
@@ -89,15 +89,15 @@
                         break;
                     case '2':
                         Console.WriteLine("> Liste des livres de la bibliothèque: \n");
-                        Console.WriteLine(stockManager.GetBooksDetails() + "\n");
+                        Console.WriteLine(bookManager.GetBooksDetails() + "\n");
                         break;
                     case '3':
                         Console.WriteLine("> Liste des livres encore disponibles à l'emprunt: \n");
-                        Console.WriteLine(stockManager.GetAvailableBooks());
+                        Console.WriteLine(bookManager.GetAvailableBooks());
                         break;
                     case '4':
                         Console.WriteLine("> Liste des livres indisponibles à l'emprunt: \n");
-                        Console.WriteLine(stockManager.GetNotAvailableBooks());
+                        Console.WriteLine(bookManager.GetNotAvailableBooks());
                         break;
                     default:
                         Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");
@@ -141,7 +141,7 @@
                                 parameters[4] = HandleStringParameterInput("Date de publication");
                                 parameters[5] = HandleStringParameterInput("Nombre du stock");
 
-                                if (stockManager.TryAddBook(parameters) == true)
+                                if (bookManager.TryAddBook(parameters) == true)
                                 {
                                     Console.WriteLine($"> Succès le livre {parameters[0]} a bien été ajouter aux livres de la bibliothèque");
                                 }
@@ -154,11 +154,12 @@
                                 exitSubMenuOption = true;
                                 break;
                             case "supprimer":
+                                // todo gestion retourn / annuler ?
                                 Console.WriteLine("> Pour supprimer un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée': \n");
-                                Console.WriteLine(stockManager.GetBooksIdAndName());
+                                Console.WriteLine(bookManager.GetBooksIdAndName());
 
                                 string bookIdString = HandleStringParameterInput("Id du livre");
-                                if (stockManager.TryDeleteBook(bookIdString) == true)
+                                if (bookManager.TryDeleteBook(bookIdString) == true)
                                 {
                                     Console.WriteLine($"> Succès le livre {bookIdString} a bien été supprimer des livres de la bibliothèque");
                                 }
@@ -210,6 +211,21 @@
                                 break;
                             case "supprimer":
 
+                                // todo gestion retourn / annuler ?
+                                Console.WriteLine("> Pour supprimer un membre tapez son Id (numéro avant le Nom, Prénom) puis tapez sur la touche 'Entrée': \n");
+                                Console.WriteLine(memberManager.GetMembersIdAndName());
+
+                                string memberIdString = HandleStringParameterInput("Id du membre");
+                                if (memberManager.TryDeleteMember(memberIdString) == true)
+                                {
+                                    Console.WriteLine($"> Succès le membre {memberIdString} a bien été supprimer des membres de la bibliothèque");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"> Une erreur est survenue lors de la suppression du membre ...");
+                                }
+                                // Pour sortir de notre boucle while plus haut
+                                exitSubMenuOption = true;
                                 break;
                             case "modifier":
                                 break;
