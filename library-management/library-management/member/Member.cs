@@ -11,7 +11,8 @@
 
         public string FirstName { get; set; }
 
-        // public List<int> BorrowedBookIds { get; set; }
+        // Tous les Ids de livres emprunter depuis la création du compte
+        public List<int> BorrowedBookIds { get; set; }
 
         public DateTime RegistrationDate { get; set; }
 
