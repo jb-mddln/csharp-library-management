@@ -76,5 +76,21 @@
                 + "\n" + "Stock: " + StockAvailable + " / " + MaxStock
                 + "\n" + "Disponible: " + (IsAvailbale() ? "Oui" : "Non");
         }
+
+        /// <summary>
+        /// Retourne notre livre au format CSV (comma-separated values)
+        /// </summary>
+        /// <returns>Infos du livre au format CSV</returns>
+        public string GetBookCSV()
+        {
+            return Id + ","
+                + Title + ","
+                + Author + ","
+                + Genre + ","
+                + Collection + ","
+                + YearOfPublication + ","
+                + StockAvailable + ","
+                + MaxStock;
+        }
     }
 }

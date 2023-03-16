@@ -1,4 +1,5 @@
 ﻿using library_management.book;
+using System.Collections.Generic;
 
 namespace library_management.managers
 {
@@ -90,6 +91,10 @@ namespace library_management.managers
             if (!int.TryParse(maxStockString, out int maxStock))
                 return false;
 
+            // La date de publication ou le stock ne peut être inférieur ou égale à 0 on stop l'ajout
+            if (yearOfPublication <= 0 || maxStock <= 0) 
+                return false;
+
             // Utilisation de Linq Select pour récupérer l'id max de notre liste Books
             int id = Books.Select(book => book.Id).Max();
 
@@ -158,7 +163,14 @@ namespace library_management.managers
         /// </summary>
         public void Save()
         {
+            // Linq, Select
+            File.WriteAllLines("books.csv", Books.Select(book => book.GetBookCSV()));
 
+            /* using StreamWriter sw = new StreamWriter("books.csv");
+             * foreach (Book book in Books)
+             * {
+             * sw.WriteLine(book.GetBookCSV());
+             * } */
         }
 
         /// <summary>
