@@ -116,6 +116,21 @@ namespace library_management.managers
             return true;
         }
 
+        public bool TryDeleteBook(string bookIdString)
+        {
+            // bookIdString n'est pas un integer valide retourne false on stop la suppression
+            if (!int.TryParse(bookIdString, out int bookId))
+                return false;
+
+            // Linq Any, notre liste Books ne contient pas de livre avec l'id on stop la suppression retourne false
+            if (!Books.Any(book => book.Id == bookId))
+                return false;
+
+            Books.RemoveAll(book => book.Id == bookId);
+
+            return true;
+        }
+
         /// <summary>
         /// Retourne les détails de tous les livres encore disponibles à l'emprunt sous forme de chaine de caractères
         /// </summary>
@@ -136,6 +151,15 @@ namespace library_management.managers
             // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
             return string.Join("\n\n", Books.Where(book => !book.IsAvailbale()).Select(book => book.GetDetails()));
+        }
+
+        /// <summary>
+        /// Retourne l'id et titre de tous les livres sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>L'id et titre de tous les livres</returns>
+        public string GetBooksIdAndName()
+        {
+            return string.Join("\n\n", Books.Select(book => book.GetIdAndName()));
         }
 
         /// <summary>

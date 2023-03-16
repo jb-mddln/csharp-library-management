@@ -154,6 +154,18 @@
                                 exitSubMenuOption = true;
                                 break;
                             case "supprimer":
+                                Console.WriteLine("> Pour supprimer un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée': \n");
+                                Console.WriteLine(stockManager.GetBooksIdAndName());
+
+                                string bookIdString = HandleStringParameterInput("Id du livre");
+                                if (stockManager.TryDeleteBook(bookIdString) == true)
+                                {
+                                    Console.WriteLine($"> Succès le livre {bookIdString} a bien été supprimer des livres de la bibliothèque");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"> Une erreur est survenue lors de la suppression du livre ...");
+                                }
                                 break;
                             case "modifier":
                                 break;
@@ -197,6 +209,7 @@
                                 exitSubMenuOption = true;
                                 break;
                             case "supprimer":
+
                                 break;
                             case "modifier":
                                 break;

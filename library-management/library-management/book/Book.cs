@@ -62,6 +62,15 @@
         }
 
         /// <summary>
+        /// Retourne uniquement l'id du livre et son titre
+        /// </summary>
+        /// <returns>Id et titre du livre</returns>
+        public string GetIdAndName()
+        {
+            return Id + " " + Title;
+        }
+
+        /// <summary>
         /// Retourne les informations du livre sous forme de chaine de caractères
         /// </summary>
         /// <returns>Infos du livre</returns>
