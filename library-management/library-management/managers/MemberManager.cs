@@ -20,48 +20,8 @@ namespace library_management.managers
             // Enregistre l'événement "ProcessExit" et déclenche la méthode "OnProcessExit" lors de la fermeture de notre console
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
-            if (File.Exists("members.csv"))
-            {
-                // Boucle foreach, chaque ligne de notre fichier members.csv représente un objet Member
-                foreach (string line in File.ReadAllLines("members.csv"))
-                {
-                    // Les infos concernant un membres sont séparées par un ',' l'ordre des infos/données et le même que notre classe Member
-                    string[] membersInfos = line.Split(",");
-
-                    // Initialise un nouveau membre avec le constructeur par défaut
-                    Member member = new Member();
-
-                    // On passe nos infos dans les différents attributs
-                    member.Id = int.Parse(membersInfos[0]);
-                    member.LastName = membersInfos[1];
-                    member.FirstName = membersInfos[2];
-
-                    string listBookIds = membersInfos[3];
-                    // List vide
-                    if (listBookIds == "[]")
-                    {
-                        member.BorrowedBookIds = new List<int>();
-                    }
-                    else
-                    {
-                        string removeBrackets = listBookIds.Replace("[", "").Replace("]", "");
-                        string[] listBookIdsSplitted = removeBrackets.Split(" ");
-                        // Linq Select string vers int puis en List
-                        member.BorrowedBookIds = listBookIdsSplitted.Select(bookIdStr => int.Parse(bookIdStr)).ToList();
-                    }
-
-                    member.RegistrationDate = DateTime.Parse(membersInfos[4]);
-
-                    // Ajout du membre dans notre liste
-                    Members.Add(member);
-                }
-
-                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin
-                return;
-            }
-
-            // Aucune donnée sur les membres, ont créé notre fichier
-            File.Create("members.csv");
+            // Charge notre fichier CSV
+            Load();
         }
 
 
@@ -194,6 +154,55 @@ namespace library_management.managers
              * memberDetails.Add(member.GetDetails());
              * }            
              * return string.Join("\n\n", memberDetails); */
+        }
+
+        /// <summary>
+        /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
+        /// </summary>
+        private void Load()
+        {
+            if (File.Exists("members.csv"))
+            {
+                // Boucle foreach, chaque ligne de notre fichier members.csv représente un objet Member
+                foreach (string line in File.ReadAllLines("members.csv"))
+                {
+                    // Les infos concernant un membres sont séparées par un ',' l'ordre des infos/données et le même que notre classe Member
+                    string[] membersInfos = line.Split(",");
+
+                    // Initialise un nouveau membre avec le constructeur par défaut
+                    Member member = new Member();
+
+                    // On passe nos infos dans les différents attributs
+                    member.Id = int.Parse(membersInfos[0]);
+                    member.LastName = membersInfos[1];
+                    member.FirstName = membersInfos[2];
+
+                    string listBookIds = membersInfos[3];
+                    // List vide
+                    if (listBookIds == "[]")
+                    {
+                        member.BorrowedBookIds = new List<int>();
+                    }
+                    else
+                    {
+                        string removeBrackets = listBookIds.Replace("[", "").Replace("]", "");
+                        string[] listBookIdsSplitted = removeBrackets.Split(" ");
+                        // Linq Select string vers int puis en List
+                        member.BorrowedBookIds = listBookIdsSplitted.Select(bookIdStr => int.Parse(bookIdStr)).ToList();
+                    }
+
+                    member.RegistrationDate = DateTime.Parse(membersInfos[4]);
+
+                    // Ajout du membre dans notre liste
+                    Members.Add(member);
+                }
+
+                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin
+                return;
+            }
+
+            // Aucune donnée sur les membres, ont créé notre fichier
+            File.Create("members.csv");
         }
 
         /// <summary>

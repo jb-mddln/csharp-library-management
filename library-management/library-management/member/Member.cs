@@ -47,7 +47,7 @@ namespace library_management.member
         /// <returns>Id du membre et son nom, prénom</returns>
         public string GetIdAndName()
         {
-            return Id + " " + LastName + " " + FirstName;
+            return this.Id + " " + this.LastName + " " + this.FirstName;
         }
 
         /// <summary>
@@ -57,10 +57,10 @@ namespace library_management.member
         public string GetDetails()
         {
             // DateTime.ToString avec le format pour ne garder que le jour/mois/année heure:minute
-            return "Id: " + Id
-                + "\n" + "Nom, Prénom: " + LastName + ", " + FirstName
-                + "\n" + "Nombre de livres empruntés: " + BorrowedBookIds.Count
-                + "\n" + "Date d'inscription: " + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
+            return "Id: " + this.Id
+                + "\n" + "Nom, Prénom: " + this.LastName + ", " + this.FirstName
+                + "\n" + "Nombre de livres empruntés: " +   this.BorrowedBookIds.Count
+                + "\n" + "Date d'inscription: " + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
 
         /// <summary>
@@ -70,11 +70,11 @@ namespace library_management.member
         public string GetCSV()
         {
             string borrowedBookId = string.Join(" ", BorrowedBookIds);
-            return Id + ","
-                + LastName + ","
-                + FirstName + ","
+            return this.Id + ","
+                + this.LastName + ","
+                + this.FirstName + ","
                 + "[" + (string.IsNullOrEmpty(borrowedBookId) ? "" : borrowedBookId) + "],"
-                + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
+                + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
 
         public string GetBorrowedBooksDetails(BookManager bookManager)

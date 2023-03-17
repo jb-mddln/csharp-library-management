@@ -20,39 +20,8 @@ namespace library_management.managers
             // Enregistre l'événement "ProcessExit" et déclenche la méthode "OnProcessExit" lors de la fermeture de notre console
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
-            if (File.Exists("books.csv"))
-            {
-                // Boucle foreach, chaque ligne de notre fichier books.csv représente un objet Book
-                foreach (string line in File.ReadAllLines("books.csv"))
-                {
-                    // Les infos concernant un livre sont séparées par un ',' l'ordre des infos/données et le même que notre classe Book
-                    string[] bookInfos = line.Split(",");
-
-                    // Initialise un nouveau livre avec le constructeur par défaut
-                    Book book = new Book();
-                    /* On aurait pu utiliser le constructeur avec paramètres également
-                     * Book book = new Book(int.Parse(bookInfos[0]), bookInfos[1], bookInfos[2], bookInfos[3], bookInfos[4], int.Parse(bookInfos[5]), int.Parse(bookInfos[6]), int.Parse(bookInfos[7])); */
-
-                    // On passe nos infos dans les différents attributs
-                    book.Id = int.Parse(bookInfos[0]);
-                    book.Title = bookInfos[1];
-                    book.Author = bookInfos[2];
-                    book.Genre = bookInfos[3];
-                    book.Collection = bookInfos[4];
-                    book.YearOfPublication = int.Parse(bookInfos[5]);
-                    book.StockAvailable = int.Parse(bookInfos[6]);
-                    book.MaxStock = int.Parse(bookInfos[7]);
-
-                    // Ajout du livre dans notre liste
-                    Books.Add(book);
-                }
-
-                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin
-                return;
-            }
-
-            // Aucune donnée sur les livres, ont créé notre fichier
-            File.Create("books.csv");
+            // Charge notre fichier CSV
+            Load();
         }
 
         /// <summary>
@@ -285,6 +254,46 @@ namespace library_management.managers
         public string GetBooksDetailsById(List<int> bookIds)
         {
             return string.Join("\n", Books.Where(book => bookIds.Contains(book.Id)).Select(book => book.GetIdAndName()));
+        }
+
+        /// <summary>
+        /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
+        /// </summary>
+        public void Load()
+        {
+            if (File.Exists("books.csv"))
+            {
+                // Boucle foreach, chaque ligne de notre fichier books.csv représente un objet Book
+                foreach (string line in File.ReadAllLines("books.csv"))
+                {
+                    // Les infos concernant un livre sont séparées par un ',' l'ordre des infos/données et le même que notre classe Book
+                    string[] bookInfos = line.Split(",");
+
+                    // Initialise un nouveau livre avec le constructeur par défaut
+                    Book book = new Book();
+                    /* On aurait pu utiliser le constructeur avec paramètres également
+                     * Book book = new Book(int.Parse(bookInfos[0]), bookInfos[1], bookInfos[2], bookInfos[3], bookInfos[4], int.Parse(bookInfos[5]), int.Parse(bookInfos[6]), int.Parse(bookInfos[7])); */
+
+                    // On passe nos infos dans les différents attributs
+                    book.Id = int.Parse(bookInfos[0]);
+                    book.Title = bookInfos[1];
+                    book.Author = bookInfos[2];
+                    book.Genre = bookInfos[3];
+                    book.Collection = bookInfos[4];
+                    book.YearOfPublication = int.Parse(bookInfos[5]);
+                    book.StockAvailable = int.Parse(bookInfos[6]);
+                    book.MaxStock = int.Parse(bookInfos[7]);
+
+                    // Ajout du livre dans notre liste
+                    Books.Add(book);
+                }
+
+                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin
+                return;
+            }
+
+            // Aucune donnée sur les livres, ont créé notre fichier
+            File.Create("books.csv");
         }
 
         /// <summary>

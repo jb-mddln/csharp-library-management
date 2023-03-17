@@ -67,7 +67,7 @@
         /// <returns>Id et titre du livre</returns>
         public string GetIdAndName()
         {
-            return Id + " " + Title;
+            return this.Id + " " + this.Title;
         }
 
         /// <summary>
@@ -76,13 +76,13 @@
         /// <returns>Infos du livre</returns>
         public string GetDetails()
         {
-            return "Id: " + Id
-                + "\n" + "Titre: " + Title
-                + "\n" + "Auteur: " + Author
-                + "\n" + "Genre: " + Genre
-                + "\n" + "Collection: " + Collection
-                + "\n" + "Date de publication: " + YearOfPublication
-                + "\n" + "Stock: " + StockAvailable + " / " + MaxStock
+            return "Id: " + this.Id
+                + "\n" + "Titre: " + this.Title
+                + "\n" + "Auteur: " + this.Author
+                + "\n" + "Genre: " + this.Genre
+                + "\n" + "Collection: " + this.Collection
+                + "\n" + "Date de publication: " + this.YearOfPublication
+                + "\n" + "Stock: " + this.StockAvailable + " / " + this.MaxStock
                 + "\n" + "Disponible: " + (IsAvailbale() ? "Oui" : "Non");
         }
 
@@ -92,14 +92,14 @@
         /// <returns>Infos du livre au format CSV</returns>
         public string GetCSV()
         {
-            return Id + ","
-                + Title + ","
-                + Author + ","
-                + Genre + ","
-                + Collection + ","
-                + YearOfPublication + ","
-                + StockAvailable + ","
-                + MaxStock;
+            return this.Id + ","
+                + this.Title + ","
+                + this.Author + ","
+                + this.Genre + ","
+                + this.Collection + ","
+                + this.YearOfPublication + ","
+                + this.StockAvailable + ","
+                + this.MaxStock;
         }
     }
 }
