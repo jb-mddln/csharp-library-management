@@ -173,22 +173,7 @@ namespace library_management.managers
                     member.Id = int.Parse(membersInfos[0]);
                     member.LastName = membersInfos[1];
                     member.FirstName = membersInfos[2];
-
-                    string listBookIds = membersInfos[3];
-                    // List vide
-                    if (listBookIds == "[]")
-                    {
-                        member.BorrowedBookIds = new List<int>();
-                    }
-                    else
-                    {
-                        string removeBrackets = listBookIds.Replace("[", "").Replace("]", "");
-                        string[] listBookIdsSplitted = removeBrackets.Split(" ");
-                        // Linq Select string vers int puis en List
-                        member.BorrowedBookIds = listBookIdsSplitted.Select(bookIdStr => int.Parse(bookIdStr)).ToList();
-                    }
-
-                    member.RegistrationDate = DateTime.Parse(membersInfos[4]);
+                    member.RegistrationDate = DateTime.Parse(membersInfos[3]);
 
                     // Ajout du membre dans notre liste
                     Members.Add(member);
@@ -208,7 +193,7 @@ namespace library_management.managers
         public void Save()
         {
             // Linq, Select
-            File.WriteAllLines("members.csv", Members.Select(member => member.GetCSV()));
+            // File.WriteAllLines("members.csv", Members.Select(member => member.GetCSV()));
 
             /* using StreamWriter sw = new StreamWriter("members.csv");
              * foreach (Member member in Members)

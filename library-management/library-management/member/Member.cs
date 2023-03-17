@@ -1,4 +1,5 @@
-﻿using library_management.managers;
+﻿using library_management.borrow;
+using library_management.managers;
 
 namespace library_management.member
 {
@@ -13,9 +14,7 @@ namespace library_management.member
 
         public string FirstName { get; set; }
 
-        // Tous les Ids de livres emprunter depuis la création du compte
-        // todo Mettre dans une classe historique ? (Date d'emprunt, date de retour ...)
-        public List<int> BorrowedBookIds { get; set; }
+        public List<BorrowingRecord> BorrowingRecords { get; set; }
 
         public DateTime RegistrationDate { get; set; }
 
@@ -33,11 +32,12 @@ namespace library_management.member
         /// <param name="lastName"></param>
         /// <param name="firstName"></param>
         /// <param name="registrationDate"></param>
-        public Member(int id, string lastName, string firstName, DateTime registrationDate)
+        public Member(int id, string lastName, string firstName, List<BorrowingRecord> borrowingRecords, DateTime registrationDate)
         {
             this.Id = id;
             this.LastName = lastName;
             this.FirstName = firstName;
+            this.BorrowingRecords = borrowingRecords;
             this.RegistrationDate = registrationDate;
         }
 
@@ -59,7 +59,7 @@ namespace library_management.member
             // DateTime.ToString avec le format pour ne garder que le jour/mois/année heure:minute
             return "Id: " + this.Id
                 + "\n" + "Nom, Prénom: " + this.LastName + ", " + this.FirstName
-                + "\n" + "Nombre de livres empruntés: " +   this.BorrowedBookIds.Count
+                + "\n" + "Nombre de livres empruntés: " +   this.BorrowingRecords.Count
                 + "\n" + "Date d'inscription: " + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
 
@@ -69,17 +69,19 @@ namespace library_management.member
         /// <returns>Infos du membre au format CSV</returns>
         public string GetCSV()
         {
-            string borrowedBookId = string.Join(" ", BorrowedBookIds);
+            return "";
+            /*string borrowedBookId = string.Join(" ", BorrowedBookIds);
             return this.Id + ","
                 + this.LastName + ","
                 + this.FirstName + ","
                 + "[" + (string.IsNullOrEmpty(borrowedBookId) ? "" : borrowedBookId) + "],"
-                + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
+                + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");*/
         }
 
         public string GetBorrowedBooksDetails(BookManager bookManager)
         {
-            return bookManager.GetBooksDetailsById(BorrowedBookIds);
+            return "";
+            // return bookManager.GetBooksDetailsById(BorrowedBookIds);
         }
     }
 }

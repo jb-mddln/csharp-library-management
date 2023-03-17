@@ -13,6 +13,7 @@ namespace library_management
             // Initialisation de nos différentes class permettant de gérer les actions de l'utilisateur
             MemberManager memberManager = new MemberManager();
             BookManager bookManager = new BookManager();
+            BorrowingManager borrowingManager = new BorrowingManager();
             MenuManager menuManager = new MenuManager();
 
             // Enregiste l'événement "ProcessExit" déclenche le code lors de la fermeture de notre console et le gère directement depuis notre Main 
