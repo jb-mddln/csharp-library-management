@@ -131,7 +131,7 @@ namespace library_management.managers
         /// <returns>L'id et nom, prénom de tous les membres</returns>
         public string GetMembersIdAndName()
         {
-            return string.Join("\n\n", Members.Select(member => member.GetIdAndName()));
+            return string.Join("", Members.Select(member => member.GetIdAndName() + "\n"));
         }
 
         /// <summary>

@@ -159,7 +159,7 @@ namespace library_management.managers
         /// <returns>L'id et titre de tous les livres</returns>
         public string GetBooksIdAndName()
         {
-            return string.Join("\n\n", Books.Select(book => book.GetIdAndName()));
+            return string.Join("", Books.Select(book => book.GetIdAndName() + "\n"));
         }
 
         /// <summary>

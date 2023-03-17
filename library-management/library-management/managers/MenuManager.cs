@@ -101,7 +101,7 @@ namespace library_management.managers
                 // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
                 while (!exitBookMenu)
                 {
-                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier");
+                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier", bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -114,6 +114,18 @@ namespace library_management.managers
             if (otherOption == "membre")
             {
                 DisplayMenuOptions("ajouter, supprimer, modifier, détails");
+
+                bool exitMemberMenu = false;
+
+                // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
+                while (!exitMemberMenu)
+                {
+                    exitMemberMenu = HandleMemberMenu("ajouter, supprimer, modifier, détails", memberManager, bookManager);
+                }
+
+                // Gestion de la touche 'Entrée' pour retourner au menu principale
+                DisplayAndHandleEnterKey();
+
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
             }
@@ -159,7 +171,13 @@ namespace library_management.managers
             DisplayAndHandleEnterKey();
         }
 
-        private bool HandleBookMenu(string options)
+        /// <summary>
+        /// Gère nos options pour le menu livre
+        /// </summary>
+        /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu livre</param>
+        /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
+        /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
+        private bool HandleBookMenu(string options, BookManager bookManager)
         {
             string? option = Console.ReadLine();
 
@@ -176,13 +194,129 @@ namespace library_management.managers
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
+                    string[] parameters = new string[6];
 
+                    parameters[0] = HandleStringParameterInput("Nom du livre");
+                    parameters[1] = HandleStringParameterInput("Auteur");
+                    parameters[2] = HandleStringParameterInput("Genre");
+                    parameters[3] = HandleStringParameterInput("Collection");
+                    parameters[4] = HandleStringParameterInput("Date de publication");
+                    parameters[5] = HandleStringParameterInput("Nombre du stock");
+
+                    if (bookManager.TryAddBook(parameters) == true)
+                    {
+                        Console.WriteLine($"> Succès le livre {parameters[0]} a bien été ajouter aux livres de la bibliothèque");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"> Une erreur est survenue lors de l'ajout du livre ...");
+                    }
                     return true;
                 case "supprimer":
+                    Console.WriteLine("> Pour supprimer un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine(bookManager.GetBooksIdAndName());
 
+                    string bookIdString = HandleStringParameterInput("Id du livre");
+                    if (bookManager.TryDeleteBook(bookIdString) == true)
+                    {
+                        Console.WriteLine($"> Succès le livre {bookIdString} a bien été supprimer des livres de la bibliothèque");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"> Une erreur est survenue lors de la suppression du livre ...");
+                    }
                     return true;
                 case "modifier":
 
+                    return true;
+                default:
+                    Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Gère nos options pour le menu membre
+        /// </summary>
+        /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu membre</param>
+        /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
+        /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
+        private bool HandleMemberMenu(string options, MemberManager memberManager, BookManager bookManager)
+        {
+            string? option = Console.ReadLine();
+
+            // Condition if, si notre ligne est null ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
+            if (string.IsNullOrEmpty(option))
+            {
+                Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
+                return false;
+            }
+
+            // Découpe le string entré par l'utilisateur, on ne veut que récupérer le 1er mot
+            string[] subMenuOption = option.Split(" ");
+
+            // Besoin plus bas dans notre switch
+            string memberIdString = string.Empty;
+            switch (subMenuOption[0].ToLower())
+            {
+                case "ajouter":
+
+                    string[] parameters = new string[2];
+
+                    parameters[0] = HandleStringParameterInput("Nom");
+                    parameters[1] = HandleStringParameterInput("Prénom");
+
+                    if (memberManager.TryAddMember(parameters) == true)
+                    {
+                        Console.WriteLine($"> Succès le membre {parameters[0]} {parameters[1]} a bien été ajouter aux membres de la bibliothèque");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"> Une erreur est survenue lors de l'ajout du membre ...");
+                    }
+
+                    return true;
+                case "supprimer":
+                    Console.WriteLine("> Pour supprimer un membre tapez son Id (numéro avant le Nom, Prénom) puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
+
+                    Console.WriteLine(memberManager.GetMembersIdAndName());
+
+                    memberIdString = HandleStringParameterInput("Id du membre");
+                    if (memberManager.TryDeleteMember(memberIdString) == true)
+                    {
+                        Console.WriteLine($"> Succès le membre {memberIdString} a bien été supprimer des membres de la bibliothèque");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"> Une erreur est survenue lors de la suppression du membre ...");
+                    }
+                    return true;
+                case "modifier":
+
+                    return true;
+                case "détails":
+                    Console.WriteLine("> Pour afficher les détails d'un membre tapez son Id (numéro avant le Nom, Prénom) puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine(memberManager.GetMembersIdAndName());
+
+                    memberIdString = HandleStringParameterInput("Id du membre");
+                    Member? member = memberManager.TryGetMember(memberIdString);
+                    if (member != null)
+                    {
+                        Console.WriteLine($"> Information du membre {member.GetIdAndName()} \n");
+                        Console.WriteLine(member.GetDetails() + "\n");
+
+                        if (member.BorrowedBookIds.Count > 0)
+                        {
+                            Console.WriteLine("> Liste des livres empruntés: \n");
+                            Console.WriteLine(member.GetBorrowedBooksDetails(bookManager) + "\n");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"> Une erreur est survenue lors de la sélection du membre ...");
+                    }
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
@@ -200,7 +334,6 @@ namespace library_management.managers
             Console.WriteLine($"> Entrez {parameterName}: ");
 
             string? parameter = Console.ReadLine();
-
             while (string.IsNullOrEmpty(parameter))
             {
                 Console.WriteLine($"> Erreur {parameterName} ne peut pas être vide ...");
