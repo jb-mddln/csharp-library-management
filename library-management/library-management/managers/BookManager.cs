@@ -17,9 +17,6 @@ namespace library_management.managers
             // Initialise notre variable Books en tant que liste vide
             Books = new List<Book>();
 
-            // Enregistre l'événement "ProcessExit" et déclenche la méthode "OnProcessExit" lors de la fermeture de notre console
-            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
-
             // Charge notre fichier CSV
             Load();
         }
@@ -309,16 +306,6 @@ namespace library_management.managers
              * {
              * sw.WriteLine(book.GetBookCSV());
              * } */
-        }
-
-        /// <summary>
-        /// Méthode de retour pour notre événement, se déclenche à la fermeture de notre console
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnProcessExit(object? sender, EventArgs e)
-        {
-            Save();
         }
     }
 }

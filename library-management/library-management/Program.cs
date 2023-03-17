@@ -12,8 +12,15 @@ namespace library_management
         {
             // Initialisation de nos différentes class permettant de gérer les actions de l'utilisateur
             MemberManager memberManager = new MemberManager();
-            BookManager stockManager = new BookManager();
+            BookManager bookManager = new BookManager();
             MenuManager menuManager = new MenuManager();
+
+            // Enregiste l'événement "ProcessExit" déclenche le code lors de la fermeture de notre console et le gère directement depuis notre Main 
+            AppDomain.CurrentDomain.ProcessExit += (object? sender, EventArgs e) =>
+            {
+                memberManager.Save();
+                bookManager.Save();
+            };
 
             // Boucle infinie pour forcer l'état ouvert de la console et gérer le texte entré dessus
             while (true)
@@ -22,7 +29,7 @@ namespace library_management
                 string? line = Console.ReadLine();
 
                 // Appelle notre méthode de gestion de menu avec nos différents managers
-                menuManager.HandleMenu(line, memberManager, stockManager);
+                menuManager.HandleMenu(line, memberManager, bookManager);
             }
         }
     }
