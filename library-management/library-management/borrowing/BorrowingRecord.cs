@@ -38,6 +38,16 @@
         }
 
         /// <summary>
+        /// Retourne les informations de l'emprunt sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>Informations de l'emprunt</returns>
+        public string GetDetails()
+        {
+            return "> Date de l'emprunt: " + DateOfBorrow.ToString("dd/MM/yyyy HH:mm")
+                + (HasReturned() ? "\n" + "> Date du retour: " + DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "");
+        }
+
+        /// <summary>
         /// Retourne notre historique au format CSV (comma-separated values)
         /// </summary>
         /// <returns>Infos de l'historique au format CSV</returns>

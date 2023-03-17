@@ -96,14 +96,14 @@ namespace library_management.managers
             string otherOption = line.ToLower();
             if (otherOption == "livre")
             {
-                DisplayMenuOptions("ajouter, supprimer, modifier");
+                DisplayMenuOptions("ajouter, supprimer, modifier, annuler");
 
                 bool exitBookMenu = false;
 
                 // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
                 while (!exitBookMenu)
                 {
-                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier", bookManager);
+                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, annuler", bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -162,6 +162,10 @@ namespace library_management.managers
                     break;
                 case '4':
                     Console.WriteLine("> Liste des livres indisponibles à l'emprunt: \n");
+                    Console.WriteLine(bookManager.GetNotAvailableBooks() + "\n");
+                    break;
+                case '5':
+                    Console.WriteLine("> Liste des emprunts en cours: \n");
                     Console.WriteLine(bookManager.GetNotAvailableBooks() + "\n");
                     break;
                 default:
@@ -267,6 +271,8 @@ namespace library_management.managers
                         Console.WriteLine("> Une erreur est survenue lors de la sélection du livre ...");
                     }
                     return true;
+                case "annuler":
+                    return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
                     return false;
@@ -346,8 +352,8 @@ namespace library_management.managers
 
                         if (member.BorrowingRecords.Count() > 0)
                         {
-                            Console.WriteLine("> Liste des livres empruntés: \n");
-                            Console.WriteLine(member.GetBorrowedBooksDetails(bookManager) + "\n");
+                            Console.WriteLine("> Liste des livres empruntés:");
+                            Console.WriteLine(member.GetBorrowedBooksDetails(bookManager));
                         }
                     }
                     else

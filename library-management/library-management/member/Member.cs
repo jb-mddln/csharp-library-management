@@ -1,5 +1,6 @@
 ﻿using library_management.borrow;
 using library_management.managers;
+using System.Text;
 
 namespace library_management.member
 {
@@ -74,14 +75,26 @@ namespace library_management.member
                 + this.FirstName + ","
                 + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
+
         /// <summary>
-        /// Retourne les informations de chaque emprunt
+        /// Retourne les informations liées aux emprunts sous forme de chaine de caractères
         /// </summary>
-        /// <param name="bookManager"></param>
-        /// <returns></returns>
+        /// <param name="bookManager">Instance de notre class BookManager utile à la récupération des infos concernant au livre emprunté</param>
+        /// <returns>Les informations liées aux emprunts</returns>
         public string GetBorrowedBooksDetails(BookManager bookManager)
         {
-            return bookManager.GetBooksDetailsById(BorrowingRecords.Select(record => record.BookId));
+             // Todo try use string.Join ?
+            string infos = string.Empty;
+            foreach (BorrowingRecord record in BorrowingRecords) 
+            {
+                string infoReturn = record.HasReturned() ? "Rendu" : "Emprunt en cours depuis: " + DateTime.Now.Subtract(record.DateOfBorrow).Days + " Jour(s)";
+                infos += "\n" 
+                    + bookManager.GetBookShortDetailsById(record.BookId)
+                    + ", " + infoReturn
+                    + "\n" + record.GetDetails()
+                    + "\n";
+            }
+            return infos;
         }
     }
 }
