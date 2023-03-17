@@ -35,7 +35,8 @@ namespace library_management.managers
 ----
 ----
 > Entrez 'livre' pour afficher le sous-menu de gestion des livres
-> Entrez 'membre' pour afficher le sous-menu de gestion des membres");
+> Entrez 'membre' pour afficher le sous-menu de gestion des membres
+> Entrez 'emprunt' pour afficher le sous-menu de gestion des emprunts");
         }
 
         /// <summary>
@@ -121,7 +122,7 @@ namespace library_management.managers
 
                 bool exitMemberMenu = false;
 
-                // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
+                // Boucle while tant que exitMemberMenu est égale à false on reste dans notre menu membre
                 while (!exitMemberMenu)
                 {
                     exitMemberMenu = HandleMemberMenu("ajouter, supprimer, modifier, détails", memberManager, bookManager);
@@ -133,8 +134,27 @@ namespace library_management.managers
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
             }
-            
-            Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ou 'livre, membre' ...");
+
+            if (otherOption == "emprunt")
+            {
+                DisplayMenuOptions("ajouter, retour");
+
+                bool exitBorrowMenu = false;
+
+                // Boucle while tant que exitBorrowMenu est égale à false on reste dans notre menu livre
+                while (!exitBorrowMenu)
+                {
+                    exitBorrowMenu = HandleBorrowMenu("ajouter, retour", borrowingManager, memberManager, bookManager);
+                }
+
+                // Gestion de la touche 'Entrée' pour retourner au menu principale
+                DisplayAndHandleEnterKey();
+
+                // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
+                return;
+            }
+
+            Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4, 5, 6' ou 'livre, membre, emprunt' ...");
             // Aucune entrée valide, on invite l'utilisateur à faire 'Entrée' pour revenir au menu principal
             DisplayAndHandleEnterKey();
         }
@@ -366,6 +386,70 @@ namespace library_management.managers
                     {
                         Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
                     }
+                    return true;
+                default:
+                    Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
+                    return false;
+            }
+        }
+
+        private bool HandleBorrowMenu(string options, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
+        {
+            string? option = Console.ReadLine();
+
+            // Condition if, si notre ligne est null ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
+            if (string.IsNullOrEmpty(option))
+            {
+                Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
+                return false;
+            }
+
+            // Découpe le string entré par l'utilisateur, on ne veut récupérer que le 1er mot
+            string[] subMenuOption = option.Split(" ");
+
+            string subMenuOptionString = subMenuOption[0].ToLower();
+            switch (subMenuOptionString)
+            {
+                // Regroupe notre case ajouter, retour car le code est sensiblement le même seul le message d'infos change
+                case "ajouter":
+                case "retour":
+                    if (subMenuOptionString == "ajouter")
+                    {
+                        Console.WriteLine("> Pour ajouter un emprunt à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
+                    }
+                    else
+                    {
+                        Console.WriteLine("> Pour retourner un livre à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
+                    }
+                    Console.WriteLine(memberManager.GetMembersIdAndName());
+
+                    string memberIdString = HandleStringParameterInput("Id du membre");
+                    Member? member = memberManager.TryGetMember(memberIdString);
+                    if (member != null)
+                    {
+                        Console.WriteLine("> Pour choisir le livre à emprunter tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
+                        Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
+
+                        Console.WriteLine(bookManager.GetAvailableBooksIdAndName());
+
+                        string bookIdString = HandleStringParameterInput("Id du livre");
+                        Book? book = bookManager.TryGetBook(bookIdString);
+                        if (book != null)
+                        {
+                            // On enlève 1 au stock disponible
+                            book.StockAvailable -= 1;
+                            borrowingManager.AddRecord(member.Id, book.Id);
+                        }
+                        else
+                        {
+                            Console.WriteLine("> Une erreur est survenue lors de la sélection du livre ...");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
+                    }
+
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");

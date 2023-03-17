@@ -1,4 +1,5 @@
 ﻿using library_management.borrow;
+using library_management.member;
 
 namespace library_management.managers
 {
@@ -57,6 +58,16 @@ namespace library_management.managers
             }
 
             return infos;
+        }
+
+        public void AddRecord(int memberId, int bookId)
+        {
+            BorrowingRecords.Add(new BorrowingRecord
+            {
+                MemberId = memberId,
+                BookId = bookId,
+                DateOfBorrow = DateTime.Now,
+            });
         }
 
         /// <summary>

@@ -230,6 +230,15 @@ namespace library_management.managers
         }
 
         /// <summary>
+        /// Retourne l'id et titre de tous les livres encore disponible à l'emprunt sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>L'id et titre de tous les livres encore disponible à l'emprunt</returns>
+        public string GetAvailableBooksIdAndName()
+        {
+            return string.Join("", Books.Where(book => book.IsAvailbale()).Select(book => book.GetIdAndName() + "\n"));
+        }
+
+        /// <summary>
         /// Retourne l'id et titre du livre sous forme de chaine de caractères
         /// </summary>
         /// <returns>L'id et titre de notre livre ou rien si le livre n'est pas trouvé</returns>
