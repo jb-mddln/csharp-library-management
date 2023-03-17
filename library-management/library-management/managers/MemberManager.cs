@@ -64,6 +64,25 @@ namespace library_management.managers
             File.Create("members.csv");
         }
 
+
+        /// <summary>
+        /// Retourne une instance de notre objet membre contenu dans notre liste de membres
+        /// </summary>
+        /// <param name="memberIdString">Id du membre</param>
+        /// <returns>Null ou notre objet membre</returns>
+        public Member? TryGetMember(string memberIdString)
+        {
+            // memberIdString n'est pas un integer valide retourne false on retourne null
+            if (!int.TryParse(memberIdString, out int memberId))
+                return null;
+
+            // Linq Any, notre liste Members ne contient pas de membre avec l'id on retourne null
+            if (!Members.Any(member => member.Id == memberId))
+                return null;
+
+            return Members.FirstOrDefault(member => member.Id == memberId);
+        }
+
         /// <summary>
         /// Essaye d'ajouter un membre à notre liste de membres
         /// </summary>
@@ -76,11 +95,11 @@ namespace library_management.managers
             string lastName = parameters[0];
             string firstName = parameters[1];
 
-            // Titre 'null' ou vide on retourne false et stop l'ajout (ne dois normalement jamais arrivée)
+            // Nom 'null' ou vide on retourne false et stop l'ajout (ne dois normalement jamais arrivée)
             if (string.IsNullOrEmpty(lastName))
                 return false;
 
-            // Auteur 'null' ou vide on retourne false et stop l'ajout (ne dois normalement jamais arrivée)
+            // Prénom 'null' ou vide on retourne false et stop l'ajout (ne dois normalement jamais arrivée)
             if (string.IsNullOrEmpty(firstName))
                 return false;
 
@@ -103,11 +122,37 @@ namespace library_management.managers
         }
 
         /// <summary>
+        /// Modifie l'instance de notre membre contenu dans notre liste Members
+        /// </summary>
+        /// <param name="memberToEdit">Instance de notre objet membre</param>
+        /// <param name="parameters">Paramètres entrés par l'utilisateur</param>
+        /// <returns>Vrai ou faux selon si l'opération de modification est un succès ou non</returns>
+        public bool TryEditMember(Member memberToEdit, string[] parameters)
+        {
+            string lastName = parameters[0];
+            string firstName = parameters[1];
+
+            // Nom n'est pas 'null' ou vide on modifie donc le nom
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                memberToEdit.LastName = lastName;
+            }
+
+            // Prénom n'est pas 'null' ou vide on modifie donc prénom
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                memberToEdit.FirstName = firstName;
+            }
+
+            // Retourne true succès
+            return true;
+        }
+
+        /// <summary>
         /// Essaye de supprimer un membre à notre liste de membres
         /// </summary>
         /// <param name="memberIdString">Id du membre</param>
         /// <returns>Vrai ou faux selon si l'opération de suppression est un succès ou non</returns>
-
         public bool TryDeleteMember(string memberIdString)
         {
             // memberIdString n'est pas un integer valide retourne false on stop la suppression
@@ -121,24 +166,6 @@ namespace library_management.managers
             Members.RemoveAll(member => member.Id == memberId);
 
             return true;
-        }
-
-        /// <summary>
-        /// Retourne une instance de notre objet membre contenu dans notre liste de membres
-        /// </summary>
-        /// <param name="memberIdString">Id du membre</param>
-        /// <returns>Null ou notre objet membre</returns>
-        public Member? TryGetMember(string memberIdString)
-        {
-            // memberIdString n'est pas un integer valide retourne false on retourne null
-            if (!int.TryParse(memberIdString, out int memberId))
-                return null;
-
-            // Linq Any, notre liste Members ne contient pas de membre avec l'id on retourne null
-            if (!Members.Any(member => member.Id == memberId))
-                return null;
-
-            return Members.FirstOrDefault(member => member.Id == memberId);
         }
 
         /// <summary>
