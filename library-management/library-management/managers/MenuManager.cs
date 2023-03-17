@@ -1,4 +1,7 @@
-﻿namespace library_management.managers
+﻿using library_management.member;
+using System.Text;
+
+namespace library_management.managers
 {
     /// <summary>
     /// Gère la partie menu de notre console et l'affichage des données
@@ -28,17 +31,18 @@
 4) Afficher tous les livres indisponibles à l'emprunt
 ----
 ----
-> Entrez 'livre' pour afficher le sous-menu de gestion des livres (ajouter, supprimer, modifier)
-> Entrez 'membre' pour afficher le sous-menu de gestion des membres (ajouter, supprimer, modifier)");
+> Entrez 'livre' pour afficher le sous-menu de gestion des livres
+> Entrez 'membre' pour afficher le sous-menu de gestion des membres");
         }
 
         /// <summary>
-        /// Affiche notre sous menu pour livre et membre
+        /// Affiche nos différentes options de notre menu (livre, membre)
         /// </summary>
-        private void DisplaySubMenu()
+        /// <param name="options">Les options valident pour notre menu</param>
+        private void DisplayMenuOptions(string options)
         {
-            Console.WriteLine(@"----
-> Entrez 'ajouter, supprimer, modifier' ...
+            Console.WriteLine(@$"----
+> Entrez '{options}' ...
 ----");
         }
 
@@ -55,7 +59,7 @@
                 Console.WriteLine("\n> Tapez sur 'Entrée' pour revenir au menu principal");
             }
 
-            // La touche pressée est égale à la touche entrée on a quitté la boucle alors on affiche le menu
+            // La touche pressée est égale à la touche 'Entrée' on a quitté la boucle alors on affiche le menu principale
             Console.Clear();
             DisplayMenu();
         }
@@ -63,14 +67,16 @@
         /// <summary>
         /// Gère notre menu, son affichage, les différentes options et actions sur nos managers
         /// </summary>
-        /// <param name="line"></param>
-        /// <param name="stock"></param>
+        /// <param name="line">Texte entré par l'utilisateur dans notre méthode Main</param>
+        /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
+        /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         public void HandleMenu(string line, MemberManager memberManager, BookManager bookManager)
         {
             // Condition if, si notre ligne est "null" ou vide alors on affiche un message d'erreur
             if (string.IsNullOrEmpty(line))
             {
                 Console.WriteLine("> Erreur ligne vide ...");
+                // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
             }
 
@@ -80,166 +86,72 @@
             // Condition if, si notre ligne ne contient qu'un caractère il s'agit surement d'une option rapide
             if (line.Length == 1)
             {
-                // Gère la sélection d'options rapide, 1er caractère de notre ligne
-                switch (line[0])
+                HandleQuickOptionsMenu(line[0], memberManager, bookManager);
+                // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
+                return;
+            }
+
+            string otherOption = line.ToLower();
+            if (otherOption == "livre")
+            {
+                DisplayMenuOptions("ajouter, supprimer, modifier");
+
+                bool exitBookMenu = false;
+
+                // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
+                while (!exitBookMenu)
                 {
-                    case '1':
-                        Console.WriteLine("> Liste des membres de la bibliothèque: \n");
-                        Console.WriteLine(memberManager.GetMembersDetails() + "\n");
-                        break;
-                    case '2':
-                        Console.WriteLine("> Liste des livres de la bibliothèque: \n");
-                        Console.WriteLine(bookManager.GetBooksDetails() + "\n");
-                        break;
-                    case '3':
-                        Console.WriteLine("> Liste des livres encore disponibles à l'emprunt: \n");
-                        Console.WriteLine(bookManager.GetAvailableBooks());
-                        break;
-                    case '4':
-                        Console.WriteLine("> Liste des livres indisponibles à l'emprunt: \n");
-                        Console.WriteLine(bookManager.GetNotAvailableBooks());
-                        break;
-                    default:
-                        Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");
-                        break;
+                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier");
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
                 DisplayAndHandleEnterKey();
 
-                // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin notre condition est remplie
+                // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
             }
 
-            DisplaySubMenu();
-
-            bool exitSubMenuOption = false;
-
-            // Découpe notre ligne de texte après chaque espace vide, sous forme de tableau Array
-            string[] subMenu = line.Split(" ");
-            // Switch uniquement sur notre 1er element string de notre tableau, ToLower pour gérer les mots entrés en majuscule/miniscule par l'utilisateur
-            switch (subMenu[0].ToLower())
+            if (otherOption == "membre")
             {
-                case "livre":
-                    // Boucle while tant que la variable exitSubMenuOption est false, gère le texte entré par l'utilisateur dans notre sous menu livre
-                    while (!exitSubMenuOption)
-                    {
-                        string? subOption = HandleSubMenuSelection();
-                        // Option null ou vide on repart en haut de notre boucle while
-                        if (string.IsNullOrEmpty(subOption))
-                            continue;
+                DisplayMenuOptions("ajouter, supprimer, modifier, détails");
+                // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
+                return;
+            }
+            
+            Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ou 'livre, membre' ...");
+            // Aucune entrée valide, on invite l'utilisateur à faire 'Entrée' pour revenir au menu principal
+            DisplayAndHandleEnterKey();
+        }
 
-                        switch (subOption)
-                        {
-                            case "ajouter":
-                                string[] parameters = new string[6];
-
-                                parameters[0] = HandleStringParameterInput("Nom du livre");
-                                parameters[1] = HandleStringParameterInput("Auteur");
-                                parameters[2] = HandleStringParameterInput("Genre");
-                                parameters[3] = HandleStringParameterInput("Collection");
-                                parameters[4] = HandleStringParameterInput("Date de publication");
-                                parameters[5] = HandleStringParameterInput("Nombre du stock");
-
-                                if (bookManager.TryAddBook(parameters) == true)
-                                {
-                                    Console.WriteLine($"> Succès le livre {parameters[0]} a bien été ajouter aux livres de la bibliothèque");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"> Une erreur est survenue lors de l'ajout du livre ...");
-                                }
-
-                                // Pour sortir de notre boucle while plus haut
-                                exitSubMenuOption = true;
-                                break;
-                            case "supprimer":
-                                // todo gestion retourn / annuler ?
-                                Console.WriteLine("> Pour supprimer un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée': \n");
-                                Console.WriteLine(bookManager.GetBooksIdAndName());
-
-                                string bookIdString = HandleStringParameterInput("Id du livre");
-                                if (bookManager.TryDeleteBook(bookIdString) == true)
-                                {
-                                    Console.WriteLine($"> Succès le livre {bookIdString} a bien été supprimer des livres de la bibliothèque");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"> Une erreur est survenue lors de la suppression du livre ...");
-                                }
-                                break;
-                            case "modifier":
-                                break;
-                            default:
-                                Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
-                                break;
-                        }
-                    }
-                    // Reset de notre variable
-                    exitSubMenuOption = false;
+        /// <summary>
+        /// Gère la sélection d'options rapide
+        /// </summary>
+        /// <param name="character">char entré par l'utilisateur (1, 2, 3, 4)</param>
+        /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
+        /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
+        private void HandleQuickOptionsMenu(char character, MemberManager memberManager, BookManager bookManager)
+        {
+            // Gère la sélection d'options rapide, 1er caractère de notre ligne
+            switch (character)
+            {
+                case '1':
+                    Console.WriteLine("> Liste des membres de la bibliothèque: \n");
+                    Console.WriteLine(memberManager.GetMembersDetails() + "\n");
                     break;
-
-                case "membre":
-                    // Boucle while tant que la variable exitSubMenuOption est false, gère le texte entré par l'utilisateur dans notre sous menu livre
-                    while (!exitSubMenuOption)
-                    {
-                        string? subOption = HandleSubMenuSelection();
-                        // Option null ou vide on repart en haut de notre boucle while
-                        if (string.IsNullOrEmpty(subOption))
-                            continue;
-
-                        switch (subOption)
-                        {
-                            case "ajouter":
-                                string[] parameters = new string[2];
-
-                                parameters[0] = HandleStringParameterInput("Nom");
-                                parameters[1] = HandleStringParameterInput("Prénom");
-
-
-                                if (memberManager.TryAddMember(parameters) == true)
-                                {
-                                    Console.WriteLine($"> Succès le membre {parameters[0]} {parameters[1]} a bien été ajouter aux membres de la bibliothèque");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"> Une erreur est survenue lors de l'ajout du membre ...");
-                                }
-
-                                // Pour sortir de notre boucle while plus haut
-                                exitSubMenuOption = true;
-                                break;
-                            case "supprimer":
-
-                                // todo gestion retourn / annuler ?
-                                Console.WriteLine("> Pour supprimer un membre tapez son Id (numéro avant le Nom, Prénom) puis tapez sur la touche 'Entrée': \n");
-                                Console.WriteLine(memberManager.GetMembersIdAndName());
-
-                                string memberIdString = HandleStringParameterInput("Id du membre");
-                                if (memberManager.TryDeleteMember(memberIdString) == true)
-                                {
-                                    Console.WriteLine($"> Succès le membre {memberIdString} a bien été supprimer des membres de la bibliothèque");
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"> Une erreur est survenue lors de la suppression du membre ...");
-                                }
-                                // Pour sortir de notre boucle while plus haut
-                                exitSubMenuOption = true;
-                                break;
-                            case "modifier":
-                                break;
-                            default:
-                                Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
-                                break;
-                        }
-                    }
-                    // Reset de notre variable
-                    exitSubMenuOption = false;
+                case '2':
+                    Console.WriteLine("> Liste des livres de la bibliothèque: \n");
+                    Console.WriteLine(bookManager.GetBooksDetails() + "\n");
                     break;
-
+                case '3':
+                    Console.WriteLine("> Liste des livres encore disponibles à l'emprunt: \n");
+                    Console.WriteLine(bookManager.GetAvailableBooks() + "\n");
+                    break;
+                case '4':
+                    Console.WriteLine("> Liste des livres indisponibles à l'emprunt: \n");
+                    Console.WriteLine(bookManager.GetNotAvailableBooks() + "\n");
+                    break;
                 default:
-                    Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'livre, membre' ...");
+                    Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");
                     break;
             }
 
@@ -247,28 +159,41 @@
             DisplayAndHandleEnterKey();
         }
 
-        private string? HandleSubMenuSelection()
+        private bool HandleBookMenu(string options)
         {
-            string? subOption = Console.ReadLine();
+            string? option = Console.ReadLine();
 
-            // Condition if, si notre ligne est "null" ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
-            if (string.IsNullOrEmpty(subOption))
+            // Condition if, si notre ligne est null ou vide alors on affiche un message invitant l'utilisateur à taper une option valide
+            if (string.IsNullOrEmpty(option))
             {
-                Console.WriteLine("> Entrez d'abord une option valide, les options valides sont 'ajouter, supprimer, modifier' ...");
-                return null;
+                Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
+                return false;
             }
-
+        
             // Découpe le string entré par l'utilisateur, on ne veut que récupérer le 1er mot
-            string[] subMenuOption = subOption.Split(" ");
+            string[] subMenuOption = option.Split(" ");
 
-            // On retourne notre string en miniscule
-            return subMenuOption[0].ToLower();
+            switch (subMenuOption[0].ToLower())
+            {
+                case "ajouter":
+
+                    return true;
+                case "supprimer":
+
+                    return true;
+                case "modifier":
+
+                    return true;
+                default:
+                    Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
+                    return false;
+            }
         }
 
         /// <summary>
-        /// Récupère le texte entré par l'utilisateur, ne peut être null ou vide
+        /// Récupère le texte entré par l'utilisateur, ne peut être null ou vide sert à récupérer les paramètres entrés par l'utilisateur
         /// </summary>
-        /// <param name="parameterName">Nom du paramètre à récupérer sert uniquement pour l'affichage du texte d'erreur</param>
+        /// <param name="parameterName">Nom du paramètre à récupérer sert uniquement pour l'affichage</param>
         /// <returns>Paramètre entré par l'utilisateur</returns>
         private string HandleStringParameterInput(string parameterName)
         {

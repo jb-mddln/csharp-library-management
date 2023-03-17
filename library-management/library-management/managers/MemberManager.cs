@@ -112,6 +112,19 @@ namespace library_management.managers
             return true;
         }
 
+        public Member? TryGetMember(string memberIdString)
+        {
+            // memberIdString n'est pas un integer valide retourne false on retourne null
+            if (!int.TryParse(memberIdString, out int memberId))
+                return null;
+
+            // Linq Any, notre liste Members ne contient pas de membre avec l'id on retourne null
+            if (!Members.Any(member => member.Id == memberId))
+                return null;
+
+            return Members.FirstOrDefault(member => member.Id == memberId);
+        }
+
         /// <summary>
         /// Retourne l'id et nom, prénom de tous les membres sous forme de chaine de caractères
         /// </summary>

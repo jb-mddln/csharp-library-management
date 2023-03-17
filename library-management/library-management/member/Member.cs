@@ -1,4 +1,6 @@
-﻿namespace library_management.member
+﻿using library_management.managers;
+
+namespace library_management.member
 {
     /// <summary>
     /// Représente notre objet Membre
@@ -12,6 +14,7 @@
         public string FirstName { get; set; }
 
         // Tous les Ids de livres emprunter depuis la création du compte
+        // todo Mettre dans une classe historique ? (Date d'emprunt, date de retour ...)
         public List<int> BorrowedBookIds { get; set; }
 
         public DateTime RegistrationDate { get; set; }
@@ -56,6 +59,7 @@
             // DateTime.ToString avec le format pour ne garder que le jour/mois/année heure:minute
             return "Id: " + Id
                 + "\n" + "Nom, Prénom: " + LastName + ", " + FirstName
+                + "\n" + "Nombre de livres empruntés: " + BorrowedBookIds.Count
                 + "\n" + "Date d'inscription: " + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
 
@@ -65,10 +69,17 @@
         /// <returns>Infos du membre au format CSV</returns>
         public string GetCSV()
         {
+            string borrowedBookId = string.Join(" ", BorrowedBookIds);
             return Id + ","
                 + LastName + ","
                 + FirstName + ","
+                + "[" + (string.IsNullOrEmpty(borrowedBookId) ? "" : borrowedBookId) + "],"
                 + RegistrationDate.ToString("dd/MM/yyyy HH:mm");
+        }
+
+        public string GetBorrowedBooksDetails(BookManager bookManager)
+        {
+            return bookManager.GetBooksDetailsById(BorrowedBookIds);
         }
     }
 }

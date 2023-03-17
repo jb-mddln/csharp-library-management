@@ -181,6 +181,11 @@ namespace library_management.managers
              * return string.Join("\n\n", booksDetails); */
         }
 
+        public string GetBooksDetailsById(List<int> bookIds)
+        {
+            return string.Join("\n", Books.Where(book => bookIds.Contains(book.Id)).Select(book => book.GetIdAndName()));
+        }
+
         /// <summary>
         /// Sauvegarde la liste Books dans un fichier books.csv
         /// </summary>
