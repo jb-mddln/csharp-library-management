@@ -1,4 +1,5 @@
 ﻿using library_management.book;
+using library_management.member;
 
 namespace library_management.managers
 {
@@ -55,6 +56,30 @@ namespace library_management.managers
             File.Create("books.csv");
         }
 
+        /// <summary>
+        /// Retourne une instance de notre objet livre contenu dans notre liste de livres
+        /// </summary>
+        /// <param name="bookIdString">Id du livre</param>
+        /// <returns>Null ou notre objet livre</returns>
+        public Book? TryGetBook(string bookIdString)
+        {
+            // N'est pas un integer valide retourne false on retourne null
+            if (!int.TryParse(bookIdString, out int bookId))
+                return null;
+
+            // Linq Any, notre liste Books ne contient pas de livre avec l'id on retourne null
+            if (!Books.Any(book => book.Id == bookId))
+                return null;
+
+            // Retourne 'null' si aucun livre trouvé, mais ne dois pas arrivé grace a notre condition avant
+            return Books.FirstOrDefault(book => book.Id == bookId);
+        }
+
+        /// <summary>
+        /// Essaye d'ajouter un livre à notre liste de livres
+        /// </summary>
+        /// <param name="parameters">Paramètres entrés par l'utilisateur</param>
+        /// <returns>Vrai ou faux selon si l'opération d'ajout est un succès ou non</returns>
         public bool TryAddBook(string[] parameters)
         {
             Book newBook = new Book();
@@ -116,6 +141,83 @@ namespace library_management.managers
             return true;
         }
 
+        /// <summary>
+        /// Modifie l'instance de notre livre contenu dans notre liste Books
+        /// </summary>
+        /// <param name="bookToEdit">Instance de notre objet livre</param>
+        /// <param name="parameters">Paramètres entrés par l'utilisateur</param>
+        /// <returns>Vrai ou faux selon si l'opération de modification est un succès ou non</returns>
+        public bool TryEditBook(Book bookToEdit, string[] parameters)
+        {
+            string title = parameters[0];
+            string author = parameters[1];
+            string genre = parameters[2];
+            string collection = parameters[3];
+            string yearOfPublicationString = parameters[4];
+            string maxStockString = parameters[5];
+
+            // Titre n'est pas 'null' ou vide on modifie donc le titre
+            if (!string.IsNullOrEmpty(title))
+            {
+                bookToEdit.Title = title;
+            }
+
+            // Auteur n'est pas 'null' ou vide on modifie donc l'auteur
+            if (!string.IsNullOrEmpty(author))
+            {
+                bookToEdit.Author = author;
+            }
+
+
+            // Genre n'est pas 'null' ou vide on modifie donc le genre
+            if (!string.IsNullOrEmpty(genre))
+            {
+                bookToEdit.Genre = genre;
+            }
+
+            // Collection n'est pas 'null' ou vide on modifie donc la collection
+            if (!string.IsNullOrEmpty(collection))
+            {
+                bookToEdit.Collection = collection;
+            }
+
+            // Année de publication n'est pas 'null' ou vide on modifie donc la collection
+            if (!string.IsNullOrEmpty(yearOfPublicationString))
+            {
+                // Année de publication n'est pas un integer valide retourne false on stop la modification
+                if (!int.TryParse(yearOfPublicationString, out int yearOfPublication))
+                    return false;
+
+                // L'année de publication ne peut être inférieur ou égale à 0 on stop la modification
+                if (yearOfPublication <= 0)
+                    return false;
+
+                bookToEdit.YearOfPublication = yearOfPublication;
+            }
+
+            // Stock n'est pas 'null' ou vide on modifie donc la collection
+            if (!string.IsNullOrEmpty(maxStockString))
+            {
+                // Stock n'est pas un integer valide retourne false on stop la modification
+                if (!int.TryParse(maxStockString, out int maxStock))
+                    return false;
+
+                // Stock ne peut être inférieur ou égale à 0 on stop la modification
+                if (maxStock <= 0)
+                    return false;
+
+                bookToEdit.MaxStock = maxStock;
+            }
+
+            // Retourne true succès
+            return true;
+        }
+
+        /// <summary>
+        /// Essaye de supprimer un livre à notre liste de livres
+        /// </summary>
+        /// <param name="bookIdString">Id du livre</param>
+        /// <returns>Vrai ou faux selon si l'opération de suppression est un succès ou non</returns>
         public bool TryDeleteBook(string bookIdString)
         {
             // bookIdString n'est pas un integer valide retourne false on stop la suppression

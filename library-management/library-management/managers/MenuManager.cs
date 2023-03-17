@@ -1,5 +1,5 @@
-﻿using library_management.member;
-using System.Text;
+﻿using library_management.book;
+using library_management.member;
 
 namespace library_management.managers
 {
@@ -21,6 +21,7 @@ namespace library_management.managers
         /// </summary>
         private void DisplayMenu()
         {
+            // @ Pour un string multi ligne
             Console.WriteLine(@"----
 ----
 > Entrez '1, 2, 3, 4' pour sélectionner rapidement une option ...
@@ -41,6 +42,7 @@ namespace library_management.managers
         /// <param name="options">Les options valident pour notre menu</param>
         private void DisplayMenuOptions(string options)
         {
+            // @ Pour un string multi ligne et $ pour la concaténation
             Console.WriteLine(@$"----
 > Entrez '{options}' ...
 ----");
@@ -191,10 +193,14 @@ namespace library_management.managers
             // Découpe le string entré par l'utilisateur, on ne veut que récupérer le 1er mot
             string[] subMenuOption = option.Split(" ");
 
+            // Besoin plus bas dans notre switch
+            string bookIdString;
+            string[] parameters;
+
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
-                    string[] parameters = new string[6];
+                    parameters = new string[6];
 
                     parameters[0] = HandleStringParameterInput("Nom du livre");
                     parameters[1] = HandleStringParameterInput("Auteur");
@@ -209,7 +215,7 @@ namespace library_management.managers
                     }
                     else
                     {
-                        Console.WriteLine($"> Une erreur est survenue lors de l'ajout du livre ...");
+                        Console.WriteLine("> Une erreur est survenue lors de l'ajout du livre ...");
                     }
                     return true;
                 case "supprimer":
@@ -217,18 +223,49 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
-                    string bookIdString = HandleStringParameterInput("Id du livre");
+                    bookIdString = HandleStringParameterInput("Id du livre");
                     if (bookManager.TryDeleteBook(bookIdString) == true)
                     {
                         Console.WriteLine($"> Succès le livre {bookIdString} a bien été supprimer des livres de la bibliothèque");
                     }
                     else
                     {
-                        Console.WriteLine($"> Une erreur est survenue lors de la suppression du livre ...");
+                        Console.WriteLine("> Une erreur est survenue lors de la suppression du livre ...");
                     }
                     return true;
                 case "modifier":
+                    Console.WriteLine("> Pour modifier un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
+                    Console.WriteLine("> Pour ne rien modifier laissez vide puis tapez sur la touche 'Entrée' et passer:");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
 
+                    Console.WriteLine(bookManager.GetBooksIdAndName());
+
+                    bookIdString = HandleStringParameterInput("Id du livre");
+                    Book? book = bookManager.TryGetBook(bookIdString);
+                    if (book != null)
+                    {
+                        parameters = new string[6];
+
+                        parameters[0] = HandleStringParameterInput("Nom du livre", true);
+                        parameters[1] = HandleStringParameterInput("Auteur", true);
+                        parameters[2] = HandleStringParameterInput("Genre", true);
+                        parameters[3] = HandleStringParameterInput("Collection", true);
+                        parameters[4] = HandleStringParameterInput("Date de publication", true);
+                        parameters[5] = HandleStringParameterInput("Nombre du stock", true);
+
+                        if (bookManager.TryEditBook(book, parameters) == true)
+                        {
+                            Console.WriteLine($"> Succès le livre {bookIdString} a bien été modifier");
+                        }
+                        else
+                        {
+                            Console.WriteLine("> Une erreur est survenue lors de la modification du livre ...");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("> Une erreur est survenue lors de la sélection du livre ...");
+                    }
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
@@ -253,7 +290,7 @@ namespace library_management.managers
                 return false;
             }
 
-            // Découpe le string entré par l'utilisateur, on ne veut que récupérer le 1er mot
+            // Découpe le string entré par l'utilisateur, on ne veut récupérer que le 1er mot
             string[] subMenuOption = option.Split(" ");
 
             // Besoin plus bas dans notre switch
@@ -273,7 +310,7 @@ namespace library_management.managers
                     }
                     else
                     {
-                        Console.WriteLine($"> Une erreur est survenue lors de l'ajout du membre ...");
+                        Console.WriteLine("> Une erreur est survenue lors de l'ajout du membre ...");
                     }
 
                     return true;
@@ -290,7 +327,7 @@ namespace library_management.managers
                     }
                     else
                     {
-                        Console.WriteLine($"> Une erreur est survenue lors de la suppression du membre ...");
+                        Console.WriteLine("> Une erreur est survenue lors de la suppression du membre ...");
                     }
                     return true;
                 case "modifier":
@@ -315,7 +352,7 @@ namespace library_management.managers
                     }
                     else
                     {
-                        Console.WriteLine($"> Une erreur est survenue lors de la sélection du membre ...");
+                        Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
                     }
                     return true;
                 default:
@@ -325,23 +362,24 @@ namespace library_management.managers
         }
 
         /// <summary>
-        /// Récupère le texte entré par l'utilisateur, ne peut être null ou vide sert à récupérer les paramètres entrés par l'utilisateur
+        /// Récupère le texte entré par l'utilisateur, sert à récupérer les paramètres entrés par l'utilisateur
         /// </summary>
         /// <param name="parameterName">Nom du paramètre à récupérer sert uniquement pour l'affichage</param>
+        /// <param name="allowEmpty">Autorise ou non l'entrée d'un paramètre vide</param>
         /// <returns>Paramètre entré par l'utilisateur</returns>
-        private string HandleStringParameterInput(string parameterName)
+        private string HandleStringParameterInput(string parameterName, bool allowEmpty = false)
         {
             Console.WriteLine($"> Entrez {parameterName}: ");
 
             string? parameter = Console.ReadLine();
-            while (string.IsNullOrEmpty(parameter))
+            while (!allowEmpty && string.IsNullOrEmpty(parameter))
             {
                 Console.WriteLine($"> Erreur {parameterName} ne peut pas être vide ...");
                 Console.WriteLine($"> Entrez {parameterName}: ");
                 parameter = Console.ReadLine();
             }
 
-            return parameter;
+            return allowEmpty && string.IsNullOrEmpty(parameter) ? string.Empty : parameter;
         }
     }
 }

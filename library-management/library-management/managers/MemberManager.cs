@@ -64,6 +64,11 @@ namespace library_management.managers
             File.Create("members.csv");
         }
 
+        /// <summary>
+        /// Essaye d'ajouter un membre à notre liste de membres
+        /// </summary>
+        /// <param name="parameters">Paramètres entrés par l'utilisateur</param>
+        /// <returns>Vrai ou faux selon si l'opération d'ajout est un succès ou non</returns>
         public bool TryAddMember(string[] parameters)
         {
             Member newMember = new Member();
@@ -97,6 +102,12 @@ namespace library_management.managers
             return true;
         }
 
+        /// <summary>
+        /// Essaye de supprimer un membre à notre liste de membres
+        /// </summary>
+        /// <param name="memberIdString">Id du membre</param>
+        /// <returns>Vrai ou faux selon si l'opération de suppression est un succès ou non</returns>
+
         public bool TryDeleteMember(string memberIdString)
         {
             // memberIdString n'est pas un integer valide retourne false on stop la suppression
@@ -112,6 +123,11 @@ namespace library_management.managers
             return true;
         }
 
+        /// <summary>
+        /// Retourne une instance de notre objet membre contenu dans notre liste de membres
+        /// </summary>
+        /// <param name="memberIdString">Id du membre</param>
+        /// <returns>Null ou notre objet membre</returns>
         public Member? TryGetMember(string memberIdString)
         {
             // memberIdString n'est pas un integer valide retourne false on retourne null
