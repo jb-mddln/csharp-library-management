@@ -434,11 +434,12 @@ namespace library_management.managers
 
                         string bookIdString = HandleStringParameterInput("Id du livre");
                         Book? book = bookManager.TryGetBook(bookIdString);
-                        if (book != null)
+                        if (book != null && book.IsAvailbale())
                         {
                             // On enlève 1 au stock disponible
                             book.StockAvailable -= 1;
                             borrowingManager.AddRecord(member.Id, book.Id);
+                            Console.WriteLine($"> Succès le membre {member.GetIdAndName} a bien emprunté le livre {book.GetIdAndName}");
                         }
                         else
                         {
@@ -449,7 +450,6 @@ namespace library_management.managers
                     {
                         Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
                     }
-
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
