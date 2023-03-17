@@ -21,6 +21,25 @@ namespace library_management.managers
             return BorrowingRecords.Where(record => record.MemberId == memberId);
         }
 
+        public string GetBorrowingsInProgress(BookManager bookManager, MemberManager memberManager)
+        {
+            string infos = string.Empty;
+            foreach (BorrowingRecord record in BorrowingRecords) 
+            {
+                // L'emprunt est finis
+                if (record.HasReturned())
+                    continue;
+
+                infos += "\n" + bookManager.GetBookIdAndNameById(record.BookId)
+                    + "> Emprunté par: " + memberManager.GetMemberIdAndNameById(record.MemberId)
+                    + " depuis: " + DateTime.Now.Subtract(record.DateOfBorrow).Days + " jour(s)"
+                    + "\n" + record.GetDetails() 
+                    + "\n";
+            }
+
+            return infos;
+        }
+
         /// <summary>
         /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
         /// </summary>

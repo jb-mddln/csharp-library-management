@@ -31,7 +31,7 @@ namespace library_management
                 string? line = Console.ReadLine();
 
                 // Appelle notre méthode de gestion de menu avec nos différents managers
-                menuManager.HandleMenu(line, memberManager, bookManager);
+                menuManager.HandleMenu(line, borrowingManager, memberManager, bookManager);
             }
         }
     }

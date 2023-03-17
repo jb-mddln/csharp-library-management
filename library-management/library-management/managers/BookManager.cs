@@ -230,6 +230,16 @@ namespace library_management.managers
         }
 
         /// <summary>
+        /// Retourne l'id et titre du livre sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>L'id et titre de notre livre ou rien si le livre n'est pas trouvé</returns>
+        public string GetBookIdAndNameById(int bookId)
+        {
+            Book? book = TryGetBook(bookId.ToString());
+            return book == null ? "??" : book.GetIdAndName() + "\n";
+        }
+
+        /// <summary>
         /// Retourne les détails de tous les livres sous forme de chaine de caractères
         /// </summary>
         /// <returns>Les détails de tous les livres</returns>
@@ -247,21 +257,6 @@ namespace library_management.managers
              * }            
              * return string.Join("\n\n", booksDetails); */
         }
-
-        public string GetBookShortDetailsById(int bookId)
-        {
-            // Linq Any, notre liste Books ne contient pas de livre avec l'id on retourne un string vide (ne dois normalement jamais arrivée)
-            if (!Books.Any(book => book.Id == bookId))
-                return string.Empty;
-
-            // Linq 1er résultat ou 'null' si aucun, mais on vérifie via la condition précédente que notre liste contient bien l'element avec l'id voulu
-            return Books.FirstOrDefault(book => book.Id == bookId).GetIdAndName();
-        }
-
-        /*public string GetBooksDetailsById(IEnumerable<int> bookIds)
-        {
-            return string.Join("\n", Books.Where(book => bookIds.Contains(book.Id)).Select(book => book.GetIdAndName()));
-        }*/
 
         /// <summary>
         /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide

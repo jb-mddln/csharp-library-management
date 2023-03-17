@@ -24,12 +24,13 @@ namespace library_management.managers
             // @ Pour un string multi ligne
             Console.WriteLine(@"----
 ----
-> Entrez '1, 2, 3, 4' pour sélectionner rapidement une option ...
+> Entrez '1, 2, 3, 4, 5' pour sélectionner rapidement une option ...
 ----
 1) Afficher tous les membres de la bibliothèque
 2) Afficher tous les livres de la bibliothèque
 3) Afficher tous les livres encore disponibles à l'emprunt
 4) Afficher tous les livres indisponibles à l'emprunt
+5) Afficher tous les emprunts en cours
 ----
 ----
 > Entrez 'livre' pour afficher le sous-menu de gestion des livres
@@ -72,7 +73,7 @@ namespace library_management.managers
         /// <param name="line">Texte entré par l'utilisateur dans notre méthode Main</param>
         /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
-        public void HandleMenu(string line, MemberManager memberManager, BookManager bookManager)
+        public void HandleMenu(string line, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
         {
             // Condition if, si notre ligne est "null" ou vide alors on affiche un message d'erreur
             if (string.IsNullOrEmpty(line))
@@ -88,7 +89,7 @@ namespace library_management.managers
             // Condition if, si notre ligne ne contient qu'un caractère il s'agit surement d'une option rapide
             if (line.Length == 1)
             {
-                HandleQuickOptionsMenu(line[0], memberManager, bookManager);
+                HandleQuickOptionsMenu(line[0], borrowingManager, memberManager, bookManager);
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
             }
@@ -143,7 +144,7 @@ namespace library_management.managers
         /// <param name="character">char entré par l'utilisateur (1, 2, 3, 4)</param>
         /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
-        private void HandleQuickOptionsMenu(char character, MemberManager memberManager, BookManager bookManager)
+        private void HandleQuickOptionsMenu(char character, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
         {
             // Gère la sélection d'options rapide, 1er caractère de notre ligne
             switch (character)
@@ -165,8 +166,8 @@ namespace library_management.managers
                     Console.WriteLine(bookManager.GetNotAvailableBooks() + "\n");
                     break;
                 case '5':
-                    Console.WriteLine("> Liste des emprunts en cours: \n");
-                    Console.WriteLine(bookManager.GetNotAvailableBooks() + "\n");
+                    Console.WriteLine("> Liste des emprunts en cours:");
+                    Console.WriteLine(borrowingManager.GetBorrowingsInProgress(bookManager, memberManager));
                     break;
                 default:
                     Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");

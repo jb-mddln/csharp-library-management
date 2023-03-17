@@ -1,4 +1,5 @@
-﻿using library_management.member;
+﻿using library_management.book;
+using library_management.member;
 
 namespace library_management.managers
 {
@@ -136,6 +137,16 @@ namespace library_management.managers
         public string GetMembersIdAndName()
         {
             return string.Join("", Members.Select(member => member.GetIdAndName() + "\n"));
+        }
+
+        /// <summary>
+        /// Retourne l'id et du membre sous forme de chaine de caractères
+        /// </summary>
+        /// <returns>L'id et titre de notre membre ou rien si le membre n'est pas trouvé</returns>
+        public string GetMemberIdAndNameById(int memberId)
+        {
+            Member? member = TryGetMember(memberId.ToString());
+            return member == null ? "??" : member.GetIdAndName();
         }
 
         /// <summary>

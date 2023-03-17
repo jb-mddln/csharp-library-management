@@ -89,7 +89,7 @@ namespace library_management.member
             {
                 string infoReturn = record.HasReturned() ? "Rendu" : "Emprunt en cours depuis: " + DateTime.Now.Subtract(record.DateOfBorrow).Days + " Jour(s)";
                 infos += "\n" 
-                    + bookManager.GetBookShortDetailsById(record.BookId)
+                    + bookManager.GetBookIdAndNameById(record.BookId)
                     + ", " + infoReturn
                     + "\n" + record.GetDetails()
                     + "\n";
