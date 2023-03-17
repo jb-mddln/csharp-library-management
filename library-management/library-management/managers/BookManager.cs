@@ -248,7 +248,7 @@ namespace library_management.managers
              * return string.Join("\n\n", booksDetails); */
         }
 
-        public string GetBooksDetailsById(List<int> bookIds)
+        public string GetBooksDetailsById(IEnumerable<int> bookIds)
         {
             return string.Join("\n", Books.Where(book => bookIds.Contains(book.Id)).Select(book => book.GetIdAndName()));
         }

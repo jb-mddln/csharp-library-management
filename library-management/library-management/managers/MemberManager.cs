@@ -7,13 +7,17 @@ namespace library_management.managers
     /// </summary>
     public class MemberManager
     {
+        public BorrowingManager BorrowingManager { get; private set; }
+
         public List<Member> Members { get; set; }
 
         /// <summary>
         /// Constructeur par défaut, récupère les infos via un fichier CSV
         /// </summary>
-        public MemberManager()
+        public MemberManager(BorrowingManager borrowingManager)
         {
+            BorrowingManager = borrowingManager;
+
             // Initialise notre variable Membres en tant que liste vide
             Members = new List<Member>();
 
@@ -174,6 +178,8 @@ namespace library_management.managers
                     member.LastName = membersInfos[1];
                     member.FirstName = membersInfos[2];
                     member.RegistrationDate = DateTime.Parse(membersInfos[3]);
+
+                    member.BorrowingRecords = BorrowingManager.TryGetMemberRecords(member.Id);
 
                     // Ajout du membre dans notre liste
                     Members.Add(member);

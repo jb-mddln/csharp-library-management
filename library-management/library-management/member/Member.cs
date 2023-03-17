@@ -14,7 +14,7 @@ namespace library_management.member
 
         public string FirstName { get; set; }
 
-        public List<BorrowingRecord> BorrowingRecords { get; set; }
+        public IEnumerable<BorrowingRecord> BorrowingRecords { get; set; }
 
         public DateTime RegistrationDate { get; set; }
 
@@ -59,7 +59,7 @@ namespace library_management.member
             // DateTime.ToString avec le format pour ne garder que le jour/mois/année heure:minute
             return "Id: " + this.Id
                 + "\n" + "Nom, Prénom: " + this.LastName + ", " + this.FirstName
-                + "\n" + "Nombre de livres empruntés: " +   this.BorrowingRecords.Count
+                + "\n" + "Nombre de livres empruntés: " +   this.BorrowingRecords.Count()
                 + "\n" + "Date d'inscription: " + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
 
@@ -69,19 +69,19 @@ namespace library_management.member
         /// <returns>Infos du membre au format CSV</returns>
         public string GetCSV()
         {
-            return "";
-            /*string borrowedBookId = string.Join(" ", BorrowedBookIds);
             return this.Id + ","
                 + this.LastName + ","
                 + this.FirstName + ","
-                + "[" + (string.IsNullOrEmpty(borrowedBookId) ? "" : borrowedBookId) + "],"
-                + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");*/
+                + this.RegistrationDate.ToString("dd/MM/yyyy HH:mm");
         }
-
+        /// <summary>
+        /// Retourne les informations de chaque emprunt
+        /// </summary>
+        /// <param name="bookManager"></param>
+        /// <returns></returns>
         public string GetBorrowedBooksDetails(BookManager bookManager)
         {
-            return "";
-            // return bookManager.GetBooksDetailsById(BorrowedBookIds);
+            return bookManager.GetBooksDetailsById(BorrowingRecords.Select(record => record.BookId));
         }
     }
 }

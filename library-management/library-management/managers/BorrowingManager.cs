@@ -12,6 +12,15 @@ namespace library_management.managers
             Load();
         }
 
+        public IEnumerable<BorrowingRecord> TryGetMemberRecords(int memberId)
+        {
+            // Aucun historique d'emprunt pour le membre, on retourne une liste vide
+            if (!BorrowingRecords.Any(member => member.MemberId == memberId))
+                return Enumerable.Empty<BorrowingRecord>();
+
+            return BorrowingRecords.Where(record => record.MemberId == memberId);
+        }
+
         /// <summary>
         /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
         /// </summary>

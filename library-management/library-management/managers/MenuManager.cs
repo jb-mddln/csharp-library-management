@@ -344,7 +344,11 @@ namespace library_management.managers
                         Console.WriteLine($"> Information du membre {member.GetIdAndName()} \n");
                         Console.WriteLine(member.GetDetails() + "\n");
 
-                        
+                        if (member.BorrowingRecords.Count() > 0)
+                        {
+                            Console.WriteLine("> Liste des livres empruntés: \n");
+                            Console.WriteLine(member.GetBorrowedBooksDetails(bookManager) + "\n");
+                        }
                     }
                     else
                     {
