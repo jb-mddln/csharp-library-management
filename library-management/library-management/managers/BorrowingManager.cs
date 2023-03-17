@@ -40,6 +40,25 @@ namespace library_management.managers
             return infos;
         }
 
+        public string GetBorrowingsDone(BookManager bookManager, MemberManager memberManager)
+        {
+            string infos = string.Empty;
+            foreach (BorrowingRecord record in BorrowingRecords)
+            {
+                // L'emprunt n'est pas finis
+                if (!record.HasReturned())
+                    continue;
+
+                infos += "\n" + bookManager.GetBookIdAndNameById(record.BookId)
+                    + "> Emprunté par: " + memberManager.GetMemberIdAndNameById(record.MemberId)
+                    + " durée de l'emprunt: " + record.DateOfReturn.Value.Subtract(record.DateOfBorrow).Days + " jour(s)"
+                    + "\n" + record.GetDetails()
+                    + "\n";
+            }
+
+            return infos;
+        }
+
         /// <summary>
         /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
         /// </summary>

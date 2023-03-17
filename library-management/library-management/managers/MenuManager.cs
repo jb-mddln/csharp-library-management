@@ -24,13 +24,14 @@ namespace library_management.managers
             // @ Pour un string multi ligne
             Console.WriteLine(@"----
 ----
-> Entrez '1, 2, 3, 4, 5' pour sélectionner rapidement une option ...
+> Entrez '1, 2, 3, 4, 5, 6' pour sélectionner rapidement une option ...
 ----
 1) Afficher tous les membres de la bibliothèque
 2) Afficher tous les livres de la bibliothèque
 3) Afficher tous les livres encore disponibles à l'emprunt
 4) Afficher tous les livres indisponibles à l'emprunt
 5) Afficher tous les emprunts en cours
+6) Afficher tous les emprunts passés
 ----
 ----
 > Entrez 'livre' pour afficher le sous-menu de gestion des livres
@@ -168,6 +169,10 @@ namespace library_management.managers
                 case '5':
                     Console.WriteLine("> Liste des emprunts en cours:");
                     Console.WriteLine(borrowingManager.GetBorrowingsInProgress(bookManager, memberManager));
+                    break;
+                case '6':
+                    Console.WriteLine("> Liste des emprunts passés:");
+                    Console.WriteLine(borrowingManager.GetBorrowingsDone(bookManager, memberManager));
                     break;
                 default:
                     Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");
