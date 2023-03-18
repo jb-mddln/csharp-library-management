@@ -1,6 +1,7 @@
 ﻿using library_management.book;
 using library_management.borrow;
 using library_management.member;
+using System.Globalization;
 
 namespace library_management.managers
 {
@@ -103,14 +104,14 @@ namespace library_management.managers
             string otherOption = line.ToLower();
             if (otherOption == "livre")
             {
-                DisplayMenuOptions("ajouter, supprimer, modifier, annuler");
+                DisplayMenuOptions("ajouter, supprimer, modifier, précédent");
 
                 bool exitBookMenu = false;
 
                 // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
                 while (!exitBookMenu)
                 {
-                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, annuler", bookManager);
+                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, précédent", bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -122,14 +123,14 @@ namespace library_management.managers
 
             if (otherOption == "membre")
             {
-                DisplayMenuOptions("ajouter, supprimer, modifier, détails");
+                DisplayMenuOptions("ajouter, supprimer, modifier, détails, précédent");
 
                 bool exitMemberMenu = false;
 
                 // Boucle while tant que exitMemberMenu est égale à false on reste dans notre menu membre
                 while (!exitMemberMenu)
                 {
-                    exitMemberMenu = HandleMemberMenu("ajouter, supprimer, modifier, détails", memberManager, bookManager);
+                    exitMemberMenu = HandleMemberMenu("ajouter, supprimer, modifier, détails, précédent", memberManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -141,14 +142,14 @@ namespace library_management.managers
 
             if (otherOption == "emprunt")
             {
-                DisplayMenuOptions("ajouter, retour");
+                DisplayMenuOptions("ajouter, retour, précédent");
 
                 bool exitBorrowMenu = false;
 
                 // Boucle while tant que exitBorrowMenu est égale à false on reste dans notre menu livre
                 while (!exitBorrowMenu)
                 {
-                    exitBorrowMenu = HandleBorrowMenu("ajouter, retour", borrowingManager, memberManager, bookManager);
+                    exitBorrowMenu = HandleBorrowMenu("ajouter, retour, précédent", borrowingManager, memberManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -199,7 +200,7 @@ namespace library_management.managers
                     Console.WriteLine(borrowingManager.GetBorrowingsDone(bookManager, memberManager));
                     break;
                 default:
-                    Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4' ...");
+                    Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4, 5, 6' ...");
                     break;
             }
 
@@ -234,6 +235,14 @@ namespace library_management.managers
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer l'ajout d'un livre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+                    
+                    // Quitte le menu et le mode ajout
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
+                    Console.WriteLine("> Ajout d'un livre:");
                     parameters = new string[6];
 
                     parameters[0] = HandleStringParameterInput("Nom du livre");
@@ -253,8 +262,14 @@ namespace library_management.managers
                     }
                     return true;
                 case "supprimer":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer la suppression d'un livre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode supprimer
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
                     Console.WriteLine("> Pour supprimer un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
-                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
                     bookIdString = HandleStringParameterInput("Id du livre");
@@ -268,9 +283,15 @@ namespace library_management.managers
                     }
                     return true;
                 case "modifier":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer la modification d'un livre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode modifier
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
                     Console.WriteLine("> Pour modifier un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
-                    Console.WriteLine("> Pour ne rien modifier laissez vide puis tapez sur la touche 'Entrée' et passer:");
-                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine("> Pour ne rien modifier laissez vide puis tapez sur la touche 'Entrée' et passer au champ suivant:");
 
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
@@ -301,7 +322,7 @@ namespace library_management.managers
                         Console.WriteLine("> Une erreur est survenue lors de la sélection du livre ...");
                     }
                     return true;
-                case "annuler":
+                case "précédent":
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
@@ -331,9 +352,18 @@ namespace library_management.managers
 
             // Besoin plus bas dans notre switch
             string memberIdString = string.Empty;
+            Member? member = null;
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer l'ajout d'un membre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode ajout
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
+                    Console.WriteLine("> Ajout d'un membre:");
 
                     string[] parameters = new string[2];
 
@@ -351,8 +381,14 @@ namespace library_management.managers
 
                     return true;
                 case "supprimer":
-                    Console.WriteLine("> Pour supprimer un membre tapez son Id (numéro avant le Nom, Prénom) puis tapez sur la touche 'Entrée': \n");
-                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 0 puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer la suppression d'un membre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode supprimer
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
+                    Console.WriteLine("> Pour supprimer un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
 
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
@@ -367,14 +403,53 @@ namespace library_management.managers
                     }
                     return true;
                 case "modifier":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer la modification d'un membre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
-                    return true;
-                case "détails":
-                    Console.WriteLine("> Pour afficher les détails d'un membre tapez son Id (numéro avant le Nom, Prénom) puis tapez sur la touche 'Entrée': \n");
+                    // Quitte le menu et le mode modifier
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
+                    Console.WriteLine("> Pour modifier un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée':");
+                    Console.WriteLine("> Pour ne rien modifier laissez vide puis tapez sur la touche 'Entrée' et passer au champ suivant:");
+
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
                     memberIdString = HandleStringParameterInput("Id du membre");
-                    Member? member = memberManager.TryGetMember(memberIdString);
+                    member = memberManager.TryGetMember(memberIdString);
+                    if (member != null)
+                    {
+                        parameters = new string[2];
+
+                        parameters[0] = HandleStringParameterInput("Nom du membre", true);
+                        parameters[1] = HandleStringParameterInput("Prénom", true);
+                        if (memberManager.TryEditMember(member, parameters) == true)
+                        {
+                            Console.WriteLine($"> Succès le membre {memberIdString} a bien été modifier");
+                        }
+                        else
+                        {
+                            Console.WriteLine("> Une erreur est survenue lors de la modification du membre ...");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
+                    }
+                    return true;
+                case "détails":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer l'affichage des détails d'un membre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode détails
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
+                    Console.WriteLine("> Pour afficher les détails d'un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine(memberManager.GetMembersIdAndName());
+
+                    memberIdString = HandleStringParameterInput("Id du membre");
+                    member = memberManager.TryGetMember(memberIdString);
                     if (member != null)
                     {
                         Console.WriteLine($"> Information du membre {member.GetIdAndName()} \n");
@@ -390,6 +465,8 @@ namespace library_management.managers
                     {
                         Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
                     }
+                    return true;
+                case "précédent":
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
@@ -413,12 +490,19 @@ namespace library_management.managers
 
             string subMenuOptionString = subMenuOption[0].ToLower();
 
+            // Besoin plus bas dans notre switch
             Member? member = null;
             Book? book = null;
             switch (subMenuOptionString)
             {
-                // Regroupe notre case ajouter, retour car le code est sensiblement le même seul le message d'infos change
                 case "ajouter":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer l'ajout d'un emprunt");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode ajout
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
                     Console.WriteLine("> Pour ajouter un emprunt à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
@@ -455,6 +539,13 @@ namespace library_management.managers
                     }
                     return true;
                 case "retour":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer le retour d'un emprunt");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode retour
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
                     Console.WriteLine("> Pour retourner un livre tapez l'Id de l'emprunt puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine("> Liste des emprunts en cours:");
                     Console.WriteLine(borrowingManager.GetBorrowingsInProgress(bookManager, memberManager));
@@ -493,6 +584,8 @@ namespace library_management.managers
                     {
                         Console.WriteLine("> Une erreur est survenue lors de la sélection de l'emprunt ...");
                     }
+                    return true;
+                case "précédent":
                     return true;
                 default:
                     Console.WriteLine($"> Entrez d'abord une option valide, les options valides sont '{options}' ...");
