@@ -99,7 +99,7 @@ namespace library_management.member
         public string GetBorrowedBooksDetails(BookManager bookManager)
         {
             string infos = string.Empty;
-            foreach (BorrowingRecord record in BorrowingRecords) 
+            foreach (BorrowingRecord record in this.BorrowingRecords) 
             {
                 string infoReturn = record.HasReturned() ? "Rendu" : "Emprunt en cours depuis: " + DateTime.Now.Subtract(record.DateOfBorrow).Days + " Jour(s)";
                 infos += "\n" 

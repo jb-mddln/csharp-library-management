@@ -109,7 +109,7 @@ namespace library_management.book
                 + "\n" + "Collection: " + this.Collection
                 + "\n" + "Année de publication: " + this.YearOfPublication
                 + "\n" + "Stock: " + this.StockAvailable + " / " + this.MaxStock
-                + "\n" + "Disponible: " + (IsAvailbale() ? "Oui" : "Non");
+                + "\n" + "Disponible: " + (this.IsAvailbale() ? "Oui" : "Non");
         }
 
         /// <summary>

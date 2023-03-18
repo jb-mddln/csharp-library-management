@@ -1,7 +1,6 @@
 ﻿using library_management.book;
 using library_management.borrow;
 using library_management.member;
-using System.Globalization;
 
 namespace library_management.managers
 {
@@ -101,6 +100,7 @@ namespace library_management.managers
                 return;
             }
 
+            // On passe en miniscule pour gérer les entrée du type Livre, LIVRE, LiVrE ...
             string otherOption = line.ToLower();
             if (otherOption == "livre")
             {
@@ -168,6 +168,7 @@ namespace library_management.managers
         /// Gère la sélection d'options rapide
         /// </summary>
         /// <param name="character">char entré par l'utilisateur (1, 2, 3, 4)</param>
+        /// <param name="borrowingManager">Passe une instance de notre class de gestion d'emprunt</param>
         /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         private void HandleQuickOptionsMenu(char character, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
@@ -212,6 +213,8 @@ namespace library_management.managers
         /// Gère nos options pour le menu livre
         /// </summary>
         /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu livre</param>
+        /// <param name="borrowingManager">Passe une instance de notre class de gestion d'emprunt</param>
+        /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
         private bool HandleBookMenu(string options, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
@@ -228,11 +231,12 @@ namespace library_management.managers
             // Découpe le string entré par l'utilisateur, on ne veut que récupérer le 1er mot
             string[] subMenuOption = option.Split(" ");
 
-            // Besoin plus bas dans notre switch
+            // Utiliser plusieurs fois plus bas dans notre switch
             string bookIdString;
             Book? book = null;
             Member? member = null;
             string[] parameters;
+
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
@@ -346,6 +350,8 @@ namespace library_management.managers
                         foreach (BorrowingRecord record in bookRecords)
                         {
                             member = memberManager.TryGetMember(record.MemberId.ToString());
+
+                            // Si membre est null on continue notre boucle en passant au prochain record (ne dois normalement jamais arrivée)
                             if (member == null)
                                 continue;
 
@@ -370,6 +376,7 @@ namespace library_management.managers
         /// </summary>
         /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu membre</param>
         /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
+        /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
         private bool HandleMemberMenu(string options, MemberManager memberManager, BookManager bookManager)
         {
@@ -385,9 +392,10 @@ namespace library_management.managers
             // Découpe le string entré par l'utilisateur, on ne veut récupérer que le 1er mot
             string[] subMenuOption = option.Split(" ");
 
-            // Besoin plus bas dans notre switch
+            // Utiliser plusieurs fois plus bas dans notre switch
             string memberIdString = string.Empty;
             Member? member = null;
+
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
@@ -509,6 +517,14 @@ namespace library_management.managers
             }
         }
 
+        /// <summary>
+        /// Gère nos options pour le menu emprunt
+        /// </summary>
+        /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu emprunt</param>
+        /// <param name="borrowingManager">Passe une instance de notre class de gestion d'emprunt</param>
+        /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
+        /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
+        /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
         private bool HandleBorrowMenu(string options, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
         {
             string? option = Console.ReadLine();
@@ -523,12 +539,11 @@ namespace library_management.managers
             // Découpe le string entré par l'utilisateur, on ne veut récupérer que le 1er mot
             string[] subMenuOption = option.Split(" ");
 
-            string subMenuOptionString = subMenuOption[0].ToLower();
-
-            // Besoin plus bas dans notre switch
+            // Utiliser plusieurs fois plus bas dans notre switch
             Member? member = null;
             Book? book = null;
-            switch (subMenuOptionString)
+
+            switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
                     Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer l'ajout d'un emprunt");
@@ -629,7 +644,7 @@ namespace library_management.managers
         }
 
         /// <summary>
-        /// Récupère le texte entré par l'utilisateur, sert à récupérer les paramètres entrés par l'utilisateur
+        /// Récupère le texte entré par l'utilisateur dans notre console
         /// </summary>
         /// <param name="parameterName">Nom du paramètre à récupérer sert uniquement pour l'affichage</param>
         /// <param name="allowEmpty">Autorise ou non l'entrée d'un paramètre vide</param>
@@ -638,7 +653,10 @@ namespace library_management.managers
         {
             Console.WriteLine($"> Entrez {parameterName}: ");
 
+            // Récupère le texte entré par l'utilisateur
             string? parameter = Console.ReadLine();
+
+            // Boucle si n'accepte pas un texte vide et que le texte est vide ou null on boucle jusqu'à ce que l'utilisateur entre quelque chose
             while (!allowEmpty && string.IsNullOrEmpty(parameter))
             {
                 Console.WriteLine($"> Erreur {parameterName} ne peut pas être vide ...");
@@ -646,6 +664,7 @@ namespace library_management.managers
                 parameter = Console.ReadLine();
             }
 
+            // Condition ternaire si accepte un texte vide et que le texte est vide ou null on retourne un string vide sinon on retourne le texte entré par l'utilisateur
             return allowEmpty && string.IsNullOrEmpty(parameter) ? string.Empty : parameter;
         }
     }

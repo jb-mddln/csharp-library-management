@@ -1,5 +1,4 @@
 ﻿using library_management.borrow;
-using library_management.member;
 
 namespace library_management.managers
 {
@@ -7,10 +6,13 @@ namespace library_management.managers
     {
         public List<BorrowingRecord> BorrowingRecords { get; set; }
 
+        /// <summary>
+        /// Constructeur par défaut, récupère les infos via un fichier CSV
+        /// </summary>
         public BorrowingManager() 
         {
-            BorrowingRecords = new List<BorrowingRecord>();
-            Load();
+            this.BorrowingRecords = new List<BorrowingRecord>();
+            this.Load();
         }
 
         /// <summary>
@@ -25,34 +27,50 @@ namespace library_management.managers
                 return null;
 
             // Linq Any, notre liste BorrowingRecords ne contient pas d'emprunt avec l'id on retourne null
-            if (!BorrowingRecords.Any(record => record.Id == recordId))
+            if (!this.BorrowingRecords.Any(record => record.Id == recordId))
                 return null;
 
-            return BorrowingRecords.FirstOrDefault(record => record.Id == recordId);
+            return this.BorrowingRecords.FirstOrDefault(record => record.Id == recordId);
         }
 
+        /// <summary>
+        /// Retourne une liste de l'historique d'emprunt d'un membre
+        /// </summary>
+        /// <param name="memberId">Id du membre</param>
+        /// <returns>Liste de l'historique d'emprunt d'un membre</returns>
         public IEnumerable<BorrowingRecord> TryGetMemberRecords(int memberId)
         {
             // Aucun historique d'emprunt pour le membre, on retourne une liste vide
-            if (!BorrowingRecords.Any(record => record.MemberId == memberId))
+            if (!this.BorrowingRecords.Any(record => record.MemberId == memberId))
                 return Enumerable.Empty<BorrowingRecord>();
 
-            return BorrowingRecords.Where(record => record.MemberId == memberId);
+            return this.BorrowingRecords.Where(record => record.MemberId == memberId);
         }
 
+        /// <summary>
+        /// Retourne une liste de l'historique d'emprunt d'un livre
+        /// </summary>
+        /// <param name="bookId">Id du livre</param>
+        /// <returns>Liste de l'historique d'emprunt d'un livre</returns>
         public IEnumerable<BorrowingRecord> TryGetBookRecords(int bookId)
         {
             // Aucun historique d'emprunt pour le membre, on retourne une liste vide
-            if (!BorrowingRecords.Any(record => record.BookId == bookId))
+            if (!this.BorrowingRecords.Any(record => record.BookId == bookId))
                 return Enumerable.Empty<BorrowingRecord>();
 
-            return BorrowingRecords.Where(record => record.BookId == bookId);
+            return this.BorrowingRecords.Where(record => record.BookId == bookId);
         }
 
+        /// <summary>
+        /// Retourne les détails de tous les emprunts en cours sous forme de chaine de caractères
+        /// </summary>
+        /// <param name="bookManager">Instance de notre class de gestion de livre</param>
+        /// <param name="memberManager">Instance de notre class de gestion de membre</param>
+        /// <returns>Les détails de tous les emprunts en cours</returns>
         public string GetBorrowingsInProgress(BookManager bookManager, MemberManager memberManager)
         {
             string infos = string.Empty;
-            foreach (BorrowingRecord record in BorrowingRecords) 
+            foreach (BorrowingRecord record in this.BorrowingRecords) 
             {
                 // L'emprunt est finis
                 if (record.HasReturned())
@@ -69,10 +87,17 @@ namespace library_management.managers
             return infos;
         }
 
+
+        /// <summary>
+        /// Retourne les détails de tous les emprunts finis sous forme de chaine de caractères
+        /// </summary>
+        /// <param name="bookManager">Instance de notre class de gestion de livre</param>
+        /// <param name="memberManager">Instance de notre class de gestion de membre</param>
+        /// <returns>Les détails de tous les emprunts finis</returns>
         public string GetBorrowingsDone(BookManager bookManager, MemberManager memberManager)
         {
             string infos = string.Empty;
-            foreach (BorrowingRecord record in BorrowingRecords)
+            foreach (BorrowingRecord record in this.BorrowingRecords)
             {
                 // L'emprunt n'est pas finis
                 if (!record.HasReturned())
@@ -88,9 +113,14 @@ namespace library_management.managers
             return infos;
         }
 
+        /// <summary>
+        /// Ajoute un emprunt de livre à notre membre
+        /// </summary>
+        /// <param name="memberId">Id du membre</param>
+        /// <param name="bookId">Id du livre</param>
         public void AddRecord(int memberId, int bookId)
         {
-            BorrowingRecords.Add(new BorrowingRecord
+            this.BorrowingRecords.Add(new BorrowingRecord
             {
                 MemberId = memberId,
                 BookId = bookId,
@@ -121,7 +151,7 @@ namespace library_management.managers
                         record.DateOfReturn = DateTime.Parse(dateOfReturnString);
                     }
 
-                    BorrowingRecords.Add(record);
+                    this.BorrowingRecords.Add(record);
                 }
 
                 return;
@@ -131,11 +161,11 @@ namespace library_management.managers
         }
 
         /// <summary>
-        /// Sauvegarde la liste Members dans un fichier members.csv
+        /// Sauvegarde la liste BorrowingRecords dans un fichier borrowingRecords.csv
         /// </summary>
         public void Save()
         {
-            File.WriteAllLines("borrowingRecords.csv", BorrowingRecords.Select(record => record.GetCSV()));
+            File.WriteAllLines("borrowingRecords.csv", this.BorrowingRecords.Select(record => record.GetCSV()));
         }
     }
 }

@@ -241,7 +241,7 @@ namespace library_management.managers
         /// <summary>
         /// Retourne l'id et titre du livre sous forme de chaine de caractères
         /// </summary>
-        /// <returns>L'id et titre de notre livre ou rien si le livre n'est pas trouvé</returns>
+        /// <returns>L'id et titre de notre livre ou ?? si le livre n'est pas trouvé</returns>
         public string GetBookIdAndNameById(int bookId)
         {
             Book? book = TryGetBook(bookId.ToString());

@@ -52,7 +52,7 @@
         public string GetDetails()
         {
             return "> Date de l'emprunt: " + this.DateOfBorrow.ToString("dd/MM/yyyy HH:mm")
-                + (HasReturned() ? "\n" + "> Date du retour: " + this.DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "");
+                + (this.HasReturned() ? "\n" + "> Date du retour: " + this.DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "");
         }
 
         /// <summary>

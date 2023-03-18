@@ -138,7 +138,8 @@ namespace library_management.managers
         /// <summary>
         /// Retourne l'id et du membre sous forme de chaine de caractères
         /// </summary>
-        /// <returns>L'id et titre de notre membre ou rien si le membre n'est pas trouvé</returns>
+        /// <param name="memberId">Id du membre</param>
+        /// <returns></returns>
         public string GetMemberIdAndNameById(int memberId)
         {
             Member? member = TryGetMember(memberId.ToString());
@@ -167,6 +168,7 @@ namespace library_management.managers
         /// <summary>
         /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
         /// </summary>
+        /// <param name="borrowingManager">Instance de notre class de gestion d'emprunt</param>
         private void Load(BorrowingManager borrowingManager)
         {
             if (File.Exists("members.csv"))
