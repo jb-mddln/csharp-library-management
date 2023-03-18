@@ -34,10 +34,19 @@ namespace library_management.managers
         public IEnumerable<BorrowingRecord> TryGetMemberRecords(int memberId)
         {
             // Aucun historique d'emprunt pour le membre, on retourne une liste vide
-            if (!BorrowingRecords.Any(member => member.MemberId == memberId))
+            if (!BorrowingRecords.Any(record => record.MemberId == memberId))
                 return Enumerable.Empty<BorrowingRecord>();
 
             return BorrowingRecords.Where(record => record.MemberId == memberId);
+        }
+
+        public IEnumerable<BorrowingRecord> TryGetBookRecords(int bookId)
+        {
+            // Aucun historique d'emprunt pour le membre, on retourne une liste vide
+            if (!BorrowingRecords.Any(record => record.BookId == bookId))
+                return Enumerable.Empty<BorrowingRecord>();
+
+            return BorrowingRecords.Where(record => record.BookId == bookId);
         }
 
         public string GetBorrowingsInProgress(BookManager bookManager, MemberManager memberManager)

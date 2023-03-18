@@ -1,4 +1,6 @@
-﻿namespace library_management.book
+﻿using library_management.borrow;
+
+namespace library_management.book
 {
     /// <summary>
     /// Représente notre objet livre
@@ -105,7 +107,7 @@
                 + "\n" + "Auteur: " + this.Author
                 + "\n" + "Genre: " + this.Genre
                 + "\n" + "Collection: " + this.Collection
-                + "\n" + "Date de publication: " + this.YearOfPublication
+                + "\n" + "Année de publication: " + this.YearOfPublication
                 + "\n" + "Stock: " + this.StockAvailable + " / " + this.MaxStock
                 + "\n" + "Disponible: " + (IsAvailbale() ? "Oui" : "Non");
         }

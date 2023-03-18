@@ -104,14 +104,14 @@ namespace library_management.managers
             string otherOption = line.ToLower();
             if (otherOption == "livre")
             {
-                DisplayMenuOptions("ajouter, supprimer, modifier, précédent");
+                DisplayMenuOptions("ajouter, supprimer, modifier, détails, précédent");
 
                 bool exitBookMenu = false;
 
                 // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
                 while (!exitBookMenu)
                 {
-                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, précédent", bookManager);
+                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, détails, précédent", borrowingManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -214,7 +214,7 @@ namespace library_management.managers
         /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu livre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
-        private bool HandleBookMenu(string options, BookManager bookManager)
+        private bool HandleBookMenu(string options, BorrowingManager borrowingManager, BookManager bookManager)
         {
             string? option = Console.ReadLine();
 
@@ -230,8 +230,8 @@ namespace library_management.managers
 
             // Besoin plus bas dans notre switch
             string bookIdString;
+            Book? book = null;
             string[] parameters;
-
             switch (subMenuOption[0].ToLower())
             {
                 case "ajouter":
@@ -296,7 +296,7 @@ namespace library_management.managers
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
                     bookIdString = HandleStringParameterInput("Id du livre");
-                    Book? book = bookManager.TryGetBook(bookIdString);
+                    book = bookManager.TryGetBook(bookIdString);
                     if (book != null)
                     {
                         parameters = new string[6];
@@ -315,6 +315,36 @@ namespace library_management.managers
                         else
                         {
                             Console.WriteLine("> Une erreur est survenue lors de la modification du livre ...");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("> Une erreur est survenue lors de la sélection du livre ...");
+                    }
+                    return true;
+                case "détails":
+                    Console.WriteLine("> Tapez sur la touche 'Entrée' pour continuer l'affichage des détails d'un livre");
+                    Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
+
+                    // Quitte le menu et le mode détails
+                    if (HandleStringParameterInput("", true) == "précédent")
+                        return true;
+
+                    Console.WriteLine("> Pour afficher les détails d'un livre tapez son Id (numéro avant titre) puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine(bookManager.GetBooksIdAndName());
+
+                    bookIdString = HandleStringParameterInput("Id du livre");
+                    book = bookManager.TryGetBook(bookIdString);
+                    if (book != null)
+                    {
+                        Console.WriteLine($"> Information du livre: \n");
+                        Console.WriteLine(book.GetDetails() + "\n");
+                        IEnumerable<BorrowingRecord> bookRecords = borrowingManager.TryGetBookRecords(book.Id);
+                        Console.WriteLine("Nombre d'emprunt: " + bookRecords.Count() + "\n");
+                        Console.WriteLine("Nombre d'emprunt en cours: " + bookRecords.Count(record => !record.HasReturned()) + "\n");
+                        foreach (BorrowingRecord record in bookRecords)
+                        {
+                            Console.WriteLine($"{record.Id} {record.DateOfBorrow}");
                         }
                     }
                     else
