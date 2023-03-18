@@ -1,10 +1,13 @@
 ﻿namespace library_management.borrow
 {
     /// <summary>
-    /// Représente l'historique d'emprunt d'un membre
+    /// Représente notre objet emprunt d'un membre
     /// </summary>
     public class BorrowingRecord
     {
+        /// <summary>
+        /// Id, utile pour identifier clairement notre livre lors des différentes opérations
+        /// </summary>
         public int Id { get; set; }
 
         /// <summary>
@@ -33,7 +36,10 @@
         public BorrowingRecord() 
         { 
         }
-
+        /// <summary>
+        /// Permets de vérifier si l'emprunt a été rendu
+        /// </summary>
+        /// <returns>Retourne vrai si la date de retour possède une valeur</returns>
         public bool HasReturned()
         {
             return this.DateOfReturn.HasValue;
@@ -50,7 +56,7 @@
         }
 
         /// <summary>
-        /// Retourne notre historique au format CSV (comma-separated values)
+        /// Retourne notre historique au format CSV (comma-separated values) sous forme de chaine de caractères
         /// </summary>
         /// <returns>Infos de l'historique au format CSV</returns>
         public string GetCSV()

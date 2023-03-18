@@ -22,6 +22,9 @@ namespace library_management.managers
         /// </summary>
         private void DisplayMenu()
         {
+            // Efface le texte de notre console pour plus de clarté
+            Console.Clear();
+
             // @ Pour un string multi ligne
             Console.WriteLine(@"----
 ----
@@ -41,7 +44,7 @@ namespace library_management.managers
         }
 
         /// <summary>
-        /// Affiche nos différentes options de notre menu (livre, membre)
+        /// Affiche nos différentes options de notre menu (livre, membre, emprunt)
         /// </summary>
         /// <param name="options">Les options valident pour notre menu</param>
         private void DisplayMenuOptions(string options)
@@ -59,14 +62,13 @@ namespace library_management.managers
         {
             Console.WriteLine("> Tapez sur 'Entrée' pour revenir au menu principal");
 
-            // Boucle infinie, récupère la touche pressée par l'utilisateur dans la console tant que ce n'est pas la touche 'Entrée' on reste dans la boucle et on affiche le message
+            // Boucle qui récupère la touche pressée par l'utilisateur dans la console et tant que ce n'est pas la touche 'Entrée' on reste dans la boucle et on affiche le message
             while (Console.ReadKey().Key != ConsoleKey.Enter)
             {
                 Console.WriteLine("\n> Tapez sur 'Entrée' pour revenir au menu principal");
             }
 
             // La touche pressée est égale à la touche 'Entrée' on a quitté la boucle alors on affiche le menu principale
-            Console.Clear();
             DisplayMenu();
         }
 

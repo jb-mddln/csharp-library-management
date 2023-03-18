@@ -5,18 +5,33 @@ using System.Text;
 namespace library_management.member
 {
     /// <summary>
-    /// Représente notre objet Membre
+    /// Représente notre objet membre
     /// </summary>
     public class Member
     {
+        /// <summary>
+        /// Id, utile pour identifier clairement notre livre lors des différentes opérations
+        /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Nom
+        /// </summary>
         public string LastName { get; set; }
 
+        /// <summary>
+        /// Prénom
+        /// </summary>
         public string FirstName { get; set; }
 
+        /// <summary>
+        /// Liste des emprunts
+        /// </summary>
         public IEnumerable<BorrowingRecord> BorrowingRecords { get; set; }
 
+        /// <summary>
+        /// Date d'inscription
+        /// </summary>
         public DateTime RegistrationDate { get; set; }
 
         /// <summary>
@@ -43,7 +58,7 @@ namespace library_management.member
         }
 
         /// <summary>
-        /// Retourne uniquement l'id du membre et son nom, prénom
+        /// Retourne uniquement l'id du membre et son nom, prénom sous forme de chaine de caractères
         /// </summary>
         /// <returns>Id du membre et son nom, prénom</returns>
         public string GetIdAndName()
@@ -65,7 +80,7 @@ namespace library_management.member
         }
 
         /// <summary>
-        /// Retourne notre membre au format CSV (comma-separated values)
+        /// Retourne notre membre au format CSV (comma-separated values) sous forme de chaine de caractères
         /// </summary>
         /// <returns>Infos du membre au format CSV</returns>
         public string GetCSV()
@@ -83,7 +98,6 @@ namespace library_management.member
         /// <returns>Les informations liées aux emprunts</returns>
         public string GetBorrowedBooksDetails(BookManager bookManager)
         {
-             // Todo try use string.Join ?
             string infos = string.Empty;
             foreach (BorrowingRecord record in BorrowingRecords) 
             {

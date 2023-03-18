@@ -5,20 +5,44 @@
     /// </summary>
     public class Book
     {
+        /// <summary>
+        /// Id, utile pour identifier clairement notre livre lors des différentes opérations
+        /// </summary>
         public int Id { get; set; }
 
+        /// <summary>
+        /// Titre
+        /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// Auteur
+        /// </summary>
         public string Author { get; set; }
 
+        /// <summary>
+        /// Genre
+        /// </summary>
         public string Genre { get; set; }
 
+        /// <summary>
+        /// Collection
+        /// </summary>
         public string Collection { get; set; }
 
+        /// <summary>
+        /// Année de publication
+        /// </summary>
         public int YearOfPublication { get; set; }
 
+        /// <summary>
+        /// Stock dispnible
+        /// </summary>
         public int StockAvailable { get; set; }
 
+        /// <summary>
+        /// Stock maximum
+        /// </summary>
         public int MaxStock { get; set; }
 
         /// <summary>
@@ -55,14 +79,14 @@
         /// <summary>
         /// Permets de vérifier si notre livre est toujours disponible à l'emprunt
         /// </summary>
-        /// <returns>Retourne vrai si le livre est toujours disponible</returns>
+        /// <returns>Retourne vrai si le stock du livre est supérieur à 0</returns>
         public bool IsAvailbale()
         {
             return this.StockAvailable > 0;
         }
 
         /// <summary>
-        /// Retourne uniquement l'id du livre et son titre
+        /// Retourne uniquement l'id du livre et son titre sous forme de chaine de caractères
         /// </summary>
         /// <returns>Id et titre du livre</returns>
         public string GetIdAndName()
@@ -87,7 +111,7 @@
         }
 
         /// <summary>
-        /// Retourne notre livre au format CSV (comma-separated values)
+        /// Retourne notre livre au format CSV (comma-separated values) sous forme de chaine de caractères
         /// </summary>
         /// <returns>Infos du livre au format CSV</returns>
         public string GetCSV()

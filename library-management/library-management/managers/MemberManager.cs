@@ -7,8 +7,6 @@ namespace library_management.managers
     /// </summary>
     public class MemberManager
     {
-        public BorrowingManager BorrowingManager { get; private set; }
-
         public List<Member> Members { get; set; }
 
         /// <summary>
@@ -16,13 +14,11 @@ namespace library_management.managers
         /// </summary>
         public MemberManager(BorrowingManager borrowingManager)
         {
-            BorrowingManager = borrowingManager;
-
             // Initialise notre variable Membres en tant que liste vide
             Members = new List<Member>();
 
             // Charge notre fichier CSV
-            Load();
+            Load(borrowingManager);
         }
 
 
@@ -41,6 +37,7 @@ namespace library_management.managers
             if (!Members.Any(member => member.Id == memberId))
                 return null;
 
+            // 1er résultat trouvé, 'null' si aucun trouvée
             return Members.FirstOrDefault(member => member.Id == memberId);
         }
 
@@ -48,7 +45,7 @@ namespace library_management.managers
         /// Essaye d'ajouter un membre à notre liste de membres
         /// </summary>
         /// <param name="parameters">Paramètres entrés par l'utilisateur</param>
-        /// <returns>Vrai ou faux selon si l'opération d'ajout est un succès ou non</returns>
+        /// <returns>Vrai ou faux selon le succès de l'opération d'ajout</returns>
         public bool TryAddMember(string[] parameters)
         {
             Member newMember = new Member();
@@ -87,7 +84,7 @@ namespace library_management.managers
         /// </summary>
         /// <param name="memberToEdit">Instance de notre objet membre</param>
         /// <param name="parameters">Paramètres entrés par l'utilisateur</param>
-        /// <returns>Vrai ou faux selon si l'opération de modification est un succès ou non</returns>
+        /// <returns>Vrai ou faux selon le succès de l'opération de modification</returns>
         public bool TryEditMember(Member memberToEdit, string[] parameters)
         {
             string lastName = parameters[0];
@@ -113,7 +110,7 @@ namespace library_management.managers
         /// Essaye de supprimer un membre à notre liste de membres
         /// </summary>
         /// <param name="memberIdString">Id du membre</param>
-        /// <returns>Vrai ou faux selon si l'opération de suppression est un succès ou non</returns>
+        /// <returns>Vrai ou faux selon le succès de l'opération de suppression</returns>
         public bool TryDeleteMember(string memberIdString)
         {
             // memberIdString n'est pas un integer valide retourne false on stop la suppression
@@ -124,8 +121,8 @@ namespace library_management.managers
             if (!Members.Any(member => member.Id == memberId))
                 return false;
 
+            // Supprime tous les membres répondant à la condition, logiquement 1 id = 1 membre donc supprime 1 membre
             Members.RemoveAll(member => member.Id == memberId);
-
             return true;
         }
 
@@ -149,9 +146,9 @@ namespace library_management.managers
         }
 
         /// <summary>
-        /// Retourne les détails de tous les livres sous forme de chaine de caractères
+        /// Retourne les détails de tous les membres sous forme de chaine de caractères
         /// </summary>
-        /// <returns>Les détails de tous les livres</returns>
+        /// <returns>Les détails de tous les membres</returns>
         public string GetMembersDetails()
         {
             // Utilisation de Linq Select pour sélectionner et retourner les infos de chaque membre
@@ -170,7 +167,7 @@ namespace library_management.managers
         /// <summary>
         /// Charge nos données depuis le CSV si disponible, sinon créer le CSV vide
         /// </summary>
-        private void Load()
+        private void Load(BorrowingManager borrowingManager)
         {
             if (File.Exists("members.csv"))
             {
@@ -189,7 +186,7 @@ namespace library_management.managers
                     member.FirstName = membersInfos[2];
                     member.RegistrationDate = DateTime.Parse(membersInfos[3]);
 
-                    member.BorrowingRecords = BorrowingManager.TryGetMemberRecords(member.Id);
+                    member.BorrowingRecords = borrowingManager.TryGetMemberRecords(member.Id);
 
                     // Ajout du membre dans notre liste
                     Members.Add(member);
