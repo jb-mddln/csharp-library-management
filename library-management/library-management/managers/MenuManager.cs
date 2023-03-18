@@ -111,7 +111,7 @@ namespace library_management.managers
                 // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
                 while (!exitBookMenu)
                 {
-                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, détails, précédent", borrowingManager, bookManager);
+                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, détails, précédent", borrowingManager, memberManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
@@ -214,7 +214,7 @@ namespace library_management.managers
         /// <param name="options">Sert pour l'affichage des options disponibles au sein du menu livre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         /// <returns>Retourne vrai ou faux selon la validité de l'action de l'utilisateur</returns>
-        private bool HandleBookMenu(string options, BorrowingManager borrowingManager, BookManager bookManager)
+        private bool HandleBookMenu(string options, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
         {
             string? option = Console.ReadLine();
 
@@ -231,6 +231,7 @@ namespace library_management.managers
             // Besoin plus bas dans notre switch
             string bookIdString;
             Book? book = null;
+            Member? member = null;
             string[] parameters;
             switch (subMenuOption[0].ToLower())
             {
@@ -340,11 +341,15 @@ namespace library_management.managers
                         Console.WriteLine($"> Information du livre: \n");
                         Console.WriteLine(book.GetDetails() + "\n");
                         IEnumerable<BorrowingRecord> bookRecords = borrowingManager.TryGetBookRecords(book.Id);
-                        Console.WriteLine("Nombre d'emprunt: " + bookRecords.Count() + "\n");
+                        Console.WriteLine("Nombre d'emprunt: " + bookRecords.Count());
                         Console.WriteLine("Nombre d'emprunt en cours: " + bookRecords.Count(record => !record.HasReturned()) + "\n");
                         foreach (BorrowingRecord record in bookRecords)
                         {
-                            Console.WriteLine($"{record.Id} {record.DateOfBorrow}");
+                            member = memberManager.TryGetMember(record.MemberId.ToString());
+                            if (member == null)
+                                continue;
+
+                            Console.WriteLine($"Emprunté par: {member.GetIdAndName()}, depuis {DateTime.Now.Subtract(record.DateOfBorrow).Days} Jour(s)\nDate de l'emprunt {record.DateOfBorrow}\n");
                         }
                     }
                     else
