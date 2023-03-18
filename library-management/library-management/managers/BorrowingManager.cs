@@ -1,4 +1,5 @@
 ﻿using library_management.borrow;
+using library_management.member;
 
 namespace library_management.managers
 {
@@ -120,8 +121,12 @@ namespace library_management.managers
         /// <param name="bookId">Id du livre</param>
         public void AddRecord(int memberId, int bookId)
         {
+            // Utilisation de Linq Select pour récupérer l'id max de notre liste d'emprunt
+            int id = BorrowingRecords.Select(record => record.Id).Max();
+
             this.BorrowingRecords.Add(new BorrowingRecord
             {
+                Id = id + 1,
                 MemberId = memberId,
                 BookId = bookId,
                 DateOfBorrow = DateTime.Now,
