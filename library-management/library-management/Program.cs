@@ -15,7 +15,7 @@ namespace library_management
             // Gestion des emprunts
             BorrowingManager borrowingManager = new BorrowingManager();
 
-            // Gestion des membres
+            // Gestion des membres, a besoin de la gestion d'emprunt pour charger les emprunts des membres
             MemberManager memberManager = new MemberManager(borrowingManager);
 
             // Gestion des livres
@@ -32,8 +32,8 @@ namespace library_management
                 bookManager.Save();
             };
 
-            // Boucle pour forcer l'état ouvert de la console et gérer le texte entré dessus, touche échappe pour fermer la console
-            while (Console.ReadKey().Key != ConsoleKey.Escape)
+            // Boucle 'infinie' pour forcer l'état ouvert de la console et gérer le texte entré dessus
+            while (true)
             {
                 // Récupère notre texte dans une variable de type string? nullable
                 string? line = Console.ReadLine();

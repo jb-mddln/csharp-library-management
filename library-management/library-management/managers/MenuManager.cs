@@ -76,6 +76,7 @@ namespace library_management.managers
         /// Gère notre menu, son affichage, les différentes options et actions sur nos managers
         /// </summary>
         /// <param name="line">Texte entré par l'utilisateur dans notre méthode Main</param>
+        /// <param name="borrowingManager">Passe une instance de notre class de gestion d'emprunt</param>
         /// <param name="memberManager">Passe une instance de notre class de gestion de membre</param>
         /// <param name="bookManager">Passe une instance de notre class de gestion de livre</param>
         public void HandleMenu(string line, BorrowingManager borrowingManager, MemberManager memberManager, BookManager bookManager)
