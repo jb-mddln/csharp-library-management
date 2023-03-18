@@ -1,4 +1,5 @@
 ﻿using library_management.book;
+using library_management.borrow;
 using library_management.member;
 
 namespace library_management.managers
@@ -408,23 +409,18 @@ namespace library_management.managers
             string[] subMenuOption = option.Split(" ");
 
             string subMenuOptionString = subMenuOption[0].ToLower();
+
+            Member? member = null;
+            Book? book = null;
             switch (subMenuOptionString)
             {
                 // Regroupe notre case ajouter, retour car le code est sensiblement le même seul le message d'infos change
                 case "ajouter":
-                case "retour":
-                    if (subMenuOptionString == "ajouter")
-                    {
-                        Console.WriteLine("> Pour ajouter un emprunt à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
-                    }
-                    else
-                    {
-                        Console.WriteLine("> Pour retourner un livre à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
-                    }
+                    Console.WriteLine("> Pour ajouter un emprunt à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
                     string memberIdString = HandleStringParameterInput("Id du membre");
-                    Member? member = memberManager.TryGetMember(memberIdString);
+                    member = memberManager.TryGetMember(memberIdString);
                     if (member != null)
                     {
                         Console.WriteLine("> Pour choisir le livre à emprunter tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
@@ -433,13 +429,17 @@ namespace library_management.managers
                         Console.WriteLine(bookManager.GetAvailableBooksIdAndName());
 
                         string bookIdString = HandleStringParameterInput("Id du livre");
-                        Book? book = bookManager.TryGetBook(bookIdString);
+                        book = bookManager.TryGetBook(bookIdString);
                         if (book != null && book.IsAvailbale())
                         {
                             // On enlève 1 au stock disponible
                             book.StockAvailable -= 1;
                             borrowingManager.AddRecord(member.Id, book.Id);
-                            Console.WriteLine($"> Succès le membre {member.GetIdAndName} a bien emprunté le livre {book.GetIdAndName}");
+
+                            // Mets à jour la liste d'emprunts du membre
+                            member.BorrowingRecords = borrowingManager.TryGetMemberRecords(member.Id);
+
+                            Console.WriteLine($"> Succès le membre {member.GetIdAndName()} a bien emprunté le livre {book.GetIdAndName()}");
                         }
                         else
                         {
@@ -449,6 +449,46 @@ namespace library_management.managers
                     else
                     {
                         Console.WriteLine("> Une erreur est survenue lors de la sélection du membre ...");
+                    }
+                    return true;
+                case "retour":
+                    Console.WriteLine("> Pour retourner un livre tapez l'Id de l'emprunt puis tapez sur la touche 'Entrée': \n");
+                    Console.WriteLine("> Liste des emprunts en cours:");
+                    Console.WriteLine(borrowingManager.GetBorrowingsInProgress(bookManager, memberManager));
+
+                    string recordIdString = HandleStringParameterInput("Id de l'emprunt");
+                    BorrowingRecord? borrowingRecord = borrowingManager.TryGetRecord(recordIdString);
+                    if (borrowingRecord != null)
+                    {
+                        member = memberManager.TryGetMember(borrowingRecord.MemberId.ToString());
+                        if (member != null)
+                        {
+                            book = bookManager.TryGetBook(borrowingRecord.BookId.ToString());
+                            if (book != null)
+                            {
+                                // On ajoute 1 au stock disponible
+                                book.StockAvailable += 1;
+                                // On ajoute la date actuelle à la date de retour
+                                borrowingRecord.DateOfReturn = DateTime.Now;
+
+                                // Mets à jour la liste d'emprunts du membre
+                                member.BorrowingRecords = borrowingManager.TryGetMemberRecords(member.Id);
+
+                                Console.WriteLine($"> Succès le membre {member.GetIdAndName()} a bien rendu le livre {book.GetIdAndName()}");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"> Une erreur est survenue lors du retour du livre, le livre Id {borrowingRecord.BookId} ne semble pas exister ...");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"> Une erreur est survenue lors du retour du livre, le membre Id {borrowingRecord.MemberId} ne semble pas exister ...");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("> Une erreur est survenue lors de la sélection de l'emprunt ...");
                     }
                     return true;
                 default:

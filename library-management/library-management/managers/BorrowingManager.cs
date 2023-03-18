@@ -13,6 +13,24 @@ namespace library_management.managers
             Load();
         }
 
+        /// <summary>
+        /// Retourne une instance de notre objet emprunt contenu dans notre liste d'emprunts
+        /// </summary>
+        /// <param name="recordIdString">Id de l'emprunt</param>
+        /// <returns>Null ou notre objet emprunt</returns>
+        public BorrowingRecord? TryGetRecord(string recordIdString)
+        {
+            // recordIdString n'est pas un integer valide retourne false on retourne null
+            if (!int.TryParse(recordIdString, out int recordId))
+                return null;
+
+            // Linq Any, notre liste BorrowingRecords ne contient pas d'emprunt avec l'id on retourne null
+            if (!BorrowingRecords.Any(record => record.Id == recordId))
+                return null;
+
+            return BorrowingRecords.FirstOrDefault(record => record.Id == recordId);
+        }
+
         public IEnumerable<BorrowingRecord> TryGetMemberRecords(int memberId)
         {
             // Aucun historique d'emprunt pour le membre, on retourne une liste vide
@@ -31,7 +49,8 @@ namespace library_management.managers
                 if (record.HasReturned())
                     continue;
 
-                infos += "\n" + bookManager.GetBookIdAndNameById(record.BookId)
+                infos += "\n" + "Id de l'emprunt: " + record.Id 
+                    + "\n" + "> Livre: " + bookManager.GetBookIdAndNameById(record.BookId)
                     + "> Emprunté par: " + memberManager.GetMemberIdAndNameById(record.MemberId)
                     + " depuis: " + DateTime.Now.Subtract(record.DateOfBorrow).Days + " jour(s)"
                     + "\n" + record.GetDetails() 
@@ -83,10 +102,11 @@ namespace library_management.managers
 
                     BorrowingRecord record = new BorrowingRecord();
 
-                    record.MemberId = int.Parse(recordInfos[0]);
-                    record.BookId = int.Parse(recordInfos[1]);
-                    record.DateOfBorrow = DateTime.Parse(recordInfos[2]);
-                    string dateOfReturnString = recordInfos[3];
+                    record.Id = int.Parse(recordInfos[0]);
+                    record.MemberId = int.Parse(recordInfos[1]);
+                    record.BookId = int.Parse(recordInfos[2]);
+                    record.DateOfBorrow = DateTime.Parse(recordInfos[3]);
+                    string dateOfReturnString = recordInfos[4];
                     if (dateOfReturnString != "null") 
                     {
                         record.DateOfReturn = DateTime.Parse(dateOfReturnString);

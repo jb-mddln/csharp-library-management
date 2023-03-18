@@ -5,6 +5,8 @@
     /// </summary>
     public class BorrowingRecord
     {
+        public int Id { get; set; }
+
         /// <summary>
         /// Id du livre emprunté
         /// </summary>
@@ -34,7 +36,7 @@
 
         public bool HasReturned()
         {
-            return DateOfReturn.HasValue;
+            return this.DateOfReturn.HasValue;
         }
 
         /// <summary>
@@ -43,8 +45,8 @@
         /// <returns>Informations de l'emprunt</returns>
         public string GetDetails()
         {
-            return "> Date de l'emprunt: " + DateOfBorrow.ToString("dd/MM/yyyy HH:mm")
-                + (HasReturned() ? "\n" + "> Date du retour: " + DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "");
+            return "> Date de l'emprunt: " + this.DateOfBorrow.ToString("dd/MM/yyyy HH:mm")
+                + (HasReturned() ? "\n" + "> Date du retour: " + this.DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "");
         }
 
         /// <summary>
@@ -53,10 +55,11 @@
         /// <returns>Infos de l'historique au format CSV</returns>
         public string GetCSV()
         {
-            return this.MemberId + ","
+            return + this.Id + "," 
+                + this.MemberId + ","
                 + this.BookId + ","
                 + this.DateOfBorrow.ToString("dd/MM/yyyy HH:mm") + ","
-                + (this.DateOfReturn.HasValue ? DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "null");
+                + (this.DateOfReturn.HasValue ? this.DateOfReturn.Value.ToString("dd/MM/yyyy HH:mm") : "null");
         }
     }
 }

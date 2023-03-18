@@ -1,5 +1,4 @@
-﻿using library_management.book;
-using library_management.member;
+﻿using library_management.member;
 
 namespace library_management.managers
 {
@@ -210,7 +209,7 @@ namespace library_management.managers
         public void Save()
         {
             // Linq, Select
-            // File.WriteAllLines("members.csv", Members.Select(member => member.GetCSV()));
+            File.WriteAllLines("members.csv", Members.Select(member => member.GetCSV()));
 
             /* using StreamWriter sw = new StreamWriter("members.csv");
              * foreach (Member member in Members)
