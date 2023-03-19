@@ -15,10 +15,10 @@ namespace library_management.managers
         public BookManager() 
         {
             // Initialise notre variable Books en tant que liste vide
-            Books = new List<Book>();
+            this.Books = new List<Book>();
 
             // Charge notre fichier CSV
-            Load();
+            this.Load();
         }
 
         /// <summary>
@@ -33,11 +33,11 @@ namespace library_management.managers
                 return null;
 
             // Linq Any, notre liste Books ne contient pas de livre avec l'id on retourne null
-            if (!Books.Any(book => book.Id == bookId))
+            if (!this.Books.Any(book => book.Id == bookId))
                 return null;
 
             // Retourne 'null' si aucun livre trouvé, mais ne dois pas arrivé grace a notre condition avant
-            return Books.FirstOrDefault(book => book.Id == bookId);
+            return this.Books.FirstOrDefault(book => book.Id == bookId);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace library_management.managers
                 return false;
 
             // Utilisation de Linq Select pour récupérer l'id max de notre liste Books
-            int id = Books.Select(book => book.Id).Max();
+            int id = this.Books.Select(book => book.Id).Max();
 
             newBook.Id = id + 1; // Id max de notre liste + 1 pour un id libre
             newBook.Title = title;
@@ -97,11 +97,11 @@ namespace library_management.managers
             newBook.MaxStock = maxStock;
 
             // Linq Any, notre liste Books contient déjà un livre avec l'id générer on stop l'ajout retourne false (ne dois normalement jamais arrivée)
-            if (Books.Any(book => book.Id == newBook.Id)) 
+            if (this.Books.Any(book => book.Id == newBook.Id)) 
                 return false;
 
             // Ajout du nouveau livre dans notre liste
-            Books.Add(newBook);
+            this.Books.Add(newBook);
             // Retourne true succès
             return true;
         }
@@ -190,10 +190,10 @@ namespace library_management.managers
                 return false;
 
             // Linq Any, notre liste Books ne contient pas de livre avec l'id on stop la suppression retourne false
-            if (!Books.Any(book => book.Id == bookId))
+            if (!this.Books.Any(book => book.Id == bookId))
                 return false;
 
-            Books.RemoveAll(book => book.Id == bookId);
+            this.Books.RemoveAll(book => book.Id == bookId);
 
             return true;
         }
@@ -206,7 +206,7 @@ namespace library_management.managers
         {
             // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
-            return string.Join("\n\n", Books.Where(book => book.IsAvailbale()).Select(book => book.GetDetails()));
+            return string.Join("\n\n", this.Books.Where(book => book.IsAvailbale()).Select(book => book.GetDetails()));
         }
 
         /// <summary>
@@ -217,7 +217,7 @@ namespace library_management.managers
         {
             // Utilisation de Linq Where avec la condition de ne prendre que les livres toujours disponibles
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
-            return string.Join("\n\n", Books.Where(book => !book.IsAvailbale()).Select(book => book.GetDetails()));
+            return string.Join("\n\n", this.Books.Where(book => !book.IsAvailbale()).Select(book => book.GetDetails()));
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace library_management.managers
         /// <returns>L'id et titre de tous les livres</returns>
         public string GetBooksIdAndName()
         {
-            return string.Join("", Books.Select(book => book.GetIdAndName() + "\n"));
+            return string.Join("", this.Books.Select(book => book.GetIdAndName() + "\n"));
         }
 
         /// <summary>
@@ -235,7 +235,7 @@ namespace library_management.managers
         /// <returns>L'id et titre de tous les livres encore disponible à l'emprunt</returns>
         public string GetAvailableBooksIdAndName()
         {
-            return string.Join("", Books.Where(book => book.IsAvailbale()).Select(book => book.GetIdAndName() + "\n"));
+            return string.Join("", this.Books.Where(book => book.IsAvailbale()).Select(book => book.GetIdAndName() + "\n"));
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace library_management.managers
         /// <returns>L'id et titre de notre livre ou ?? si le livre n'est pas trouvé</returns>
         public string GetBookIdAndNameById(int bookId)
         {
-            Book? book = TryGetBook(bookId.ToString());
+            Book? book = this.TryGetBook(bookId.ToString());
             return book == null ? "??" : book.GetIdAndName() + "\n";
         }
 
@@ -256,7 +256,7 @@ namespace library_management.managers
         {
             // Utilisation de Linq Select pour sélectionner et retourner les infos de chaque livre
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
-            return string.Join("\n\n", Books.Select(book => book.GetDetails()));
+            return string.Join("\n\n", this.Books.Select(book => book.GetDetails()));
 
             /* Liste vide pour stocker nos string contenant les infos des livres
              * var booksDetails = new List<string>();
@@ -296,7 +296,7 @@ namespace library_management.managers
                     book.MaxStock = int.Parse(bookInfos[7]);
 
                     // Ajout du livre dans notre liste
-                    Books.Add(book);
+                    this.Books.Add(book);
                 }
 
                 // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin
@@ -313,7 +313,7 @@ namespace library_management.managers
         public void Save()
         {
             // Linq, Select
-            File.WriteAllLines("books.csv", Books.Select(book => book.GetCSV()));
+            File.WriteAllLines("books.csv", this.Books.Select(book => book.GetCSV()));
 
             /* using StreamWriter sw = new StreamWriter("books.csv");
              * foreach (Book book in Books)

@@ -15,10 +15,10 @@ namespace library_management.managers
         public MemberManager(BorrowingManager borrowingManager)
         {
             // Initialise notre variable Membres en tant que liste vide
-            Members = new List<Member>();
+            this.Members = new List<Member>();
 
             // Charge notre fichier CSV
-            Load(borrowingManager);
+            this.Load(borrowingManager);
         }
 
 
@@ -34,11 +34,11 @@ namespace library_management.managers
                 return null;
 
             // Linq Any, notre liste Members ne contient pas de membre avec l'id on retourne null
-            if (!Members.Any(member => member.Id == memberId))
+            if (!this.Members.Any(member => member.Id == memberId))
                 return null;
 
             // 1er résultat trouvé, 'null' si aucun trouvée
-            return Members.FirstOrDefault(member => member.Id == memberId);
+            return this.Members.FirstOrDefault(member => member.Id == memberId);
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace library_management.managers
                 return false;
 
             // Utilisation de Linq Select pour récupérer l'id max de notre liste membre
-            int id = Members.Select(member => member.Id).Max();
+            int id = this.Members.Select(member => member.Id).Max();
 
             newMember.Id = id + 1; // Id max de notre liste + 1 pour un id libre
             newMember.LastName = lastName;
@@ -70,11 +70,11 @@ namespace library_management.managers
             newMember.RegistrationDate = DateTime.Now;
 
             // Linq Any, notre liste Books contient déjà un livre avec l'id générer on stop l'ajout retourne false (ne dois normalement jamais arrivée)
-            if (Members.Any(member => member.Id == newMember.Id))
+            if (this.Members.Any(member => member.Id == newMember.Id))
                 return false;
 
             // Ajout du nouveau membre dans notre liste
-            Members.Add(newMember);
+            this.Members.Add(newMember);
             // Retourne true succès
             return true;
         }
@@ -118,11 +118,11 @@ namespace library_management.managers
                 return false;
 
             // Linq Any, notre liste Members ne contient pas de membre avec l'id on stop la suppression retourne false
-            if (!Members.Any(member => member.Id == memberId))
+            if (!this.Members.Any(member => member.Id == memberId))
                 return false;
 
             // Supprime tous les membres répondant à la condition, logiquement 1 id = 1 membre donc supprime 1 membre
-            Members.RemoveAll(member => member.Id == memberId);
+            this.Members.RemoveAll(member => member.Id == memberId);
             return true;
         }
 
@@ -132,7 +132,7 @@ namespace library_management.managers
         /// <returns>L'id et nom, prénom de tous les membres</returns>
         public string GetMembersIdAndName()
         {
-            return string.Join("", Members.Select(member => member.GetIdAndName() + "\n"));
+            return string.Join("", this.Members.Select(member => member.GetIdAndName() + "\n"));
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace library_management.managers
         /// <returns></returns>
         public string GetMemberIdAndNameById(int memberId)
         {
-            Member? member = TryGetMember(memberId.ToString());
+            Member? member = this.TryGetMember(memberId.ToString());
             return member == null ? "??" : member.GetIdAndName();
         }
 
@@ -154,7 +154,7 @@ namespace library_management.managers
         {
             // Utilisation de Linq Select pour sélectionner et retourner les infos de chaque membre
             // Utilisation de string.Join pour joindre notre liste de détails et ajouter deux retours à la ligne pour la clarté lors de l'affichage
-            return string.Join("\n\n", Members.Select(member => member.GetDetails()));
+            return string.Join("\n\n", this.Members.Select(member => member.GetDetails()));
 
             /* Liste vide pour stocker nos string contenant les infos des membres
              * var memberDetails = new List<string>();
@@ -191,7 +191,7 @@ namespace library_management.managers
                     member.BorrowingRecords = borrowingManager.TryGetMemberRecords(member.Id);
 
                     // Ajout du membre dans notre liste
-                    Members.Add(member);
+                    this.Members.Add(member);
                 }
 
                 // Retour pour stopper l'exécution du code, pas besoin d'aller plus loin
@@ -208,7 +208,7 @@ namespace library_management.managers
         public void Save()
         {
             // Linq, Select
-            File.WriteAllLines("members.csv", Members.Select(member => member.GetCSV()));
+            File.WriteAllLines("members.csv", this.Members.Select(member => member.GetCSV()));
 
             /* using StreamWriter sw = new StreamWriter("members.csv");
              * foreach (Member member in Members)

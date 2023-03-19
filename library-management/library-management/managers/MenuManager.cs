@@ -14,7 +14,7 @@ namespace library_management.managers
         /// </summary>
         public MenuManager()
         {
-            DisplayMenu();
+            this.DisplayMenu();
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace library_management.managers
             }
 
             // La touche pressée est égale à la touche 'Entrée' on a quitté la boucle alors on affiche le menu principale
-            DisplayMenu();
+            this.DisplayMenu();
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace library_management.managers
             // Condition if, si notre ligne ne contient qu'un caractère il s'agit surement d'une option rapide
             if (line.Length == 1)
             {
-                HandleQuickOptionsMenu(line[0], borrowingManager, memberManager, bookManager);
+                this.HandleQuickOptionsMenu(line[0], borrowingManager, memberManager, bookManager);
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
             }
@@ -104,18 +104,18 @@ namespace library_management.managers
             string otherOption = line.ToLower();
             if (otherOption == "livre")
             {
-                DisplayMenuOptions("ajouter, supprimer, modifier, détails, précédent");
+                this.DisplayMenuOptions("ajouter, supprimer, modifier, détails, précédent");
 
                 bool exitBookMenu = false;
 
                 // Boucle while tant que exitBookMenu est égale à false on reste dans notre menu livre
                 while (!exitBookMenu)
                 {
-                    exitBookMenu = HandleBookMenu("ajouter, supprimer, modifier, détails, précédent", borrowingManager, memberManager, bookManager);
+                    exitBookMenu = this.HandleBookMenu("ajouter, supprimer, modifier, détails, précédent", borrowingManager, memberManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
-                DisplayAndHandleEnterKey();
+                this.DisplayAndHandleEnterKey();
 
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
@@ -123,18 +123,18 @@ namespace library_management.managers
 
             if (otherOption == "membre")
             {
-                DisplayMenuOptions("ajouter, supprimer, modifier, détails, précédent");
+                this.DisplayMenuOptions("ajouter, supprimer, modifier, détails, précédent");
 
                 bool exitMemberMenu = false;
 
                 // Boucle while tant que exitMemberMenu est égale à false on reste dans notre menu membre
                 while (!exitMemberMenu)
                 {
-                    exitMemberMenu = HandleMemberMenu("ajouter, supprimer, modifier, détails, précédent", memberManager, bookManager);
+                    exitMemberMenu = this.HandleMemberMenu("ajouter, supprimer, modifier, détails, précédent", memberManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
-                DisplayAndHandleEnterKey();
+                this.DisplayAndHandleEnterKey();
 
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
@@ -142,18 +142,18 @@ namespace library_management.managers
 
             if (otherOption == "emprunt")
             {
-                DisplayMenuOptions("ajouter, retour, précédent");
+                this.DisplayMenuOptions("ajouter, retour, précédent");
 
                 bool exitBorrowMenu = false;
 
                 // Boucle while tant que exitBorrowMenu est égale à false on reste dans notre menu livre
                 while (!exitBorrowMenu)
                 {
-                    exitBorrowMenu = HandleBorrowMenu("ajouter, retour, précédent", borrowingManager, memberManager, bookManager);
+                    exitBorrowMenu = this.HandleBorrowMenu("ajouter, retour, précédent", borrowingManager, memberManager, bookManager);
                 }
 
                 // Gestion de la touche 'Entrée' pour retourner au menu principale
-                DisplayAndHandleEnterKey();
+                this.DisplayAndHandleEnterKey();
 
                 // Condition remplie, on effectue un retour pour ne pas exécuter le code plus bas
                 return;
@@ -161,7 +161,7 @@ namespace library_management.managers
 
             Console.WriteLine("> Entrez d'abord une option valide, les options valides sont '1, 2, 3, 4, 5, 6' ou 'livre, membre, emprunt' ...");
             // Aucune entrée valide, on invite l'utilisateur à faire 'Entrée' pour revenir au menu principal
-            DisplayAndHandleEnterKey();
+            this.DisplayAndHandleEnterKey();
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace library_management.managers
             }
 
             // Gestion de la touche 'Entrée' pour retourner au menu principale
-            DisplayAndHandleEnterKey();
+            this.DisplayAndHandleEnterKey();
         }
 
         /// <summary>
@@ -244,18 +244,18 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
                     
                     // Quitte le menu et le mode ajout
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Ajout d'un livre:");
                     parameters = new string[6];
 
-                    parameters[0] = HandleStringParameterInput("Nom du livre");
-                    parameters[1] = HandleStringParameterInput("Auteur");
-                    parameters[2] = HandleStringParameterInput("Genre");
-                    parameters[3] = HandleStringParameterInput("Collection");
-                    parameters[4] = HandleStringParameterInput("Date de publication");
-                    parameters[5] = HandleStringParameterInput("Nombre du stock");
+                    parameters[0] = this.HandleStringParameterInput("Nom du livre");
+                    parameters[1] = this.HandleStringParameterInput("Auteur");
+                    parameters[2] = this.HandleStringParameterInput("Genre");
+                    parameters[3] = this.HandleStringParameterInput("Collection");
+                    parameters[4] = this.HandleStringParameterInput("Date de publication");
+                    parameters[5] = this.HandleStringParameterInput("Nombre du stock");
 
                     if (bookManager.TryAddBook(parameters) == true)
                     {
@@ -271,13 +271,13 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode supprimer
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour supprimer un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
-                    bookIdString = HandleStringParameterInput("Id du livre");
+                    bookIdString = this.HandleStringParameterInput("Id du livre");
                     if (bookManager.TryDeleteBook(bookIdString) == true)
                     {
                         Console.WriteLine($"> Succès le livre {bookIdString} a bien été supprimer des livres de la bibliothèque");
@@ -292,7 +292,7 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode modifier
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour modifier un livre tapez son Id (numéro avant le titre) puis tapez sur la touche 'Entrée':");
@@ -300,18 +300,18 @@ namespace library_management.managers
 
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
-                    bookIdString = HandleStringParameterInput("Id du livre");
+                    bookIdString = this.HandleStringParameterInput("Id du livre");
                     book = bookManager.TryGetBook(bookIdString);
                     if (book != null)
                     {
                         parameters = new string[6];
 
-                        parameters[0] = HandleStringParameterInput("Nom du livre", true);
-                        parameters[1] = HandleStringParameterInput("Auteur", true);
-                        parameters[2] = HandleStringParameterInput("Genre", true);
-                        parameters[3] = HandleStringParameterInput("Collection", true);
-                        parameters[4] = HandleStringParameterInput("Date de publication", true);
-                        parameters[5] = HandleStringParameterInput("Nombre du stock", true);
+                        parameters[0] = this.HandleStringParameterInput("Nom du livre", true);
+                        parameters[1] = this.HandleStringParameterInput("Auteur", true);
+                        parameters[2] = this.HandleStringParameterInput("Genre", true);
+                        parameters[3] = this.HandleStringParameterInput("Collection", true);
+                        parameters[4] = this.HandleStringParameterInput("Date de publication", true);
+                        parameters[5] = this.HandleStringParameterInput("Nombre du stock", true);
 
                         if (bookManager.TryEditBook(book, parameters) == true)
                         {
@@ -332,13 +332,13 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode détails
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour afficher les détails d'un livre tapez son Id (numéro avant titre) puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(bookManager.GetBooksIdAndName());
 
-                    bookIdString = HandleStringParameterInput("Id du livre");
+                    bookIdString = this.HandleStringParameterInput("Id du livre");
                     book = bookManager.TryGetBook(bookIdString);
                     if (book != null)
                     {
@@ -403,15 +403,15 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode ajout
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Ajout d'un membre:");
 
                     string[] parameters = new string[2];
 
-                    parameters[0] = HandleStringParameterInput("Nom");
-                    parameters[1] = HandleStringParameterInput("Prénom");
+                    parameters[0] = this.HandleStringParameterInput("Nom");
+                    parameters[1] = this.HandleStringParameterInput("Prénom");
 
                     if (memberManager.TryAddMember(parameters) == true)
                     {
@@ -428,14 +428,14 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode supprimer
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour supprimer un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
 
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
-                    memberIdString = HandleStringParameterInput("Id du membre");
+                    memberIdString = this.HandleStringParameterInput("Id du membre");
                     if (memberManager.TryDeleteMember(memberIdString) == true)
                     {
                         Console.WriteLine($"> Succès le membre {memberIdString} a bien été supprimer des membres de la bibliothèque");
@@ -450,7 +450,7 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode modifier
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour modifier un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée':");
@@ -458,14 +458,14 @@ namespace library_management.managers
 
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
-                    memberIdString = HandleStringParameterInput("Id du membre");
+                    memberIdString = this.HandleStringParameterInput("Id du membre");
                     member = memberManager.TryGetMember(memberIdString);
                     if (member != null)
                     {
                         parameters = new string[2];
 
-                        parameters[0] = HandleStringParameterInput("Nom du membre", true);
-                        parameters[1] = HandleStringParameterInput("Prénom", true);
+                        parameters[0] = this.HandleStringParameterInput("Nom du membre", true);
+                        parameters[1] = this.HandleStringParameterInput("Prénom", true);
                         if (memberManager.TryEditMember(member, parameters) == true)
                         {
                             Console.WriteLine($"> Succès le membre {memberIdString} a bien été modifier");
@@ -485,13 +485,13 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode détails
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour afficher les détails d'un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
-                    memberIdString = HandleStringParameterInput("Id du membre");
+                    memberIdString = this.HandleStringParameterInput("Id du membre");
                     member = memberManager.TryGetMember(memberIdString);
                     if (member != null)
                     {
@@ -556,7 +556,7 @@ namespace library_management.managers
                     Console.WriteLine("> Pour ajouter un emprunt à un membre tapez son Id (numéro avant le nom, prénom) puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine(memberManager.GetMembersIdAndName());
 
-                    string memberIdString = HandleStringParameterInput("Id du membre");
+                    string memberIdString = this.HandleStringParameterInput("Id du membre");
                     member = memberManager.TryGetMember(memberIdString);
                     if (member != null)
                     {
@@ -565,7 +565,7 @@ namespace library_management.managers
 
                         Console.WriteLine(bookManager.GetAvailableBooksIdAndName());
 
-                        string bookIdString = HandleStringParameterInput("Id du livre");
+                        string bookIdString = this.HandleStringParameterInput("Id du livre");
                         book = bookManager.TryGetBook(bookIdString);
                         if (book != null && book.IsAvailbale())
                         {
@@ -593,14 +593,14 @@ namespace library_management.managers
                     Console.WriteLine("> Pour annuler et revenir au menu principal entrez 'précédent' puis tapez sur la touche 'Entrée' \n");
 
                     // Quitte le menu et le mode retour
-                    if (HandleStringParameterInput("", true) == "précédent")
+                    if (this.HandleStringParameterInput("", true) == "précédent")
                         return true;
 
                     Console.WriteLine("> Pour retourner un livre tapez l'Id de l'emprunt puis tapez sur la touche 'Entrée': \n");
                     Console.WriteLine("> Liste des emprunts en cours:");
                     Console.WriteLine(borrowingManager.GetBorrowingsInProgress(bookManager, memberManager));
 
-                    string recordIdString = HandleStringParameterInput("Id de l'emprunt");
+                    string recordIdString = this.HandleStringParameterInput("Id de l'emprunt");
                     BorrowingRecord? borrowingRecord = borrowingManager.TryGetRecord(recordIdString);
                     if (borrowingRecord != null)
                     {
