@@ -1,4 +1,4 @@
-# Exercices Console C# .NET 6.0
+# Exercice Console C# .NET 6.0
 ### Contexte du projet
 La bibliothèque municipale souhaite vérifier les entrées/sorties des livres qu'elle a en sa possession et ainsi pouvoir consulter son stock à un instant donné.
 * Le code devra être développé en mode console dans un langage 100% orienté objet (Java ou C#)
